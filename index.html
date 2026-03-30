@@ -321,7 +321,19 @@
           list.innerHTML = '<p style="color:var(--muted);font-size:14px;">Momenteel geen shows gepland.</p>';
           return;
         }
-        list.innerHTML = shows.map(s => `
+        list.innerHTML = shows.map(s => {
+          let href = '#contact', target = '', rel = '';
+          if (s.infoLink) {
+            const l = s.infoLink.trim();
+            if (l.includes('@') && !l.startsWith('http')) {
+              href = 'mailto:' + l;
+            } else {
+              href   = l;
+              target = ' target="_blank"';
+              rel    = ' rel="noopener"';
+            }
+          }
+          return `
           <div class="show-item">
             <div class="show-date">
               <span class="show-day">${s.day}</span>
@@ -333,8 +345,9 @@
               <span class="show-city">${s.city}</span>
               <span class="show-day-label">${s.weekday}</span>
             </div>
-            <a href="#contact" class="btn btn-sm btn-outline">Info</a>
-          </div>`).join('');
+            <a href="${href}"${target}${rel} class="btn btn-sm btn-outline">Info</a>
+          </div>`;
+        }).join('');
         // fade-in on newly created items
         list.querySelectorAll('.show-item').forEach(el => {
           el.classList.add('fade-in');

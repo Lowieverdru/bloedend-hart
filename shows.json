@@ -6,7 +6,8 @@
     "month": "APR",
     "year": "2025",
     "venue": "Bibliotheek Ieper",
-    "city": "Ieper, België"
+    "city": "Ieper, België",
+    "infoLink": ""
   },
   {
     "id": "2",
@@ -15,7 +16,8 @@
     "month": "APR",
     "year": "2025",
     "venue": "De Frontieren",
-    "city": "Westouter, België"
+    "city": "Westouter, België",
+    "infoLink": ""
   },
   {
     "id": "3",
@@ -24,7 +26,8 @@
     "month": "MEI",
     "year": "2025",
     "venue": "Folk Center Dranouter",
-    "city": "Dranouter, België"
+    "city": "Dranouter, België",
+    "infoLink": ""
   },
   {
     "id": "4",
@@ -33,6 +36,7 @@
     "month": "MEI",
     "year": "2025",
     "venue": "Vlamertinge",
-    "city": "Vlamertinge, België"
+    "city": "Vlamertinge, België",
+    "infoLink": ""
   }
 ]

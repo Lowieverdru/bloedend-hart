@@ -453,6 +453,11 @@
           <label>Stad *</label>
           <input type="text" id="new-city" placeholder="bv. Westouter, België" />
         </div>
+        <div class="form-group">
+          <label>Info-knop link <span style="text-transform:none;font-weight:400;letter-spacing:0">(optioneel)</span></label>
+          <input type="text" id="new-infolink" placeholder="https://… of e-mailadres" />
+          <span style="font-size:11px;color:var(--muted);margin-top:4px;">Leeg = verwijst naar contactformulier</span>
+        </div>
       </div>
       <div class="form-footer">
         <button class="btn btn-red" onclick="addShow()">
@@ -533,6 +538,11 @@
       <div class="form-group">
         <label>Stad *</label>
         <input type="text" id="edit-city" />
+      </div>
+      <div class="form-group">
+        <label>Info-knop link <span style="text-transform:none;font-weight:400;letter-spacing:0">(optioneel)</span></label>
+        <input type="text" id="edit-infolink" placeholder="https://… of e-mailadres" />
+        <span style="font-size:11px;color:var(--muted);margin-top:4px;">Leeg = verwijst naar contactformulier</span>
       </div>
     </div>
     <div class="form-footer">
@@ -670,6 +680,7 @@
           <span class="venue">${s.venue}</span>
           <span class="city">${s.city}</span>
           <span class="wd">${s.weekday}</span>
+          ${s.infoLink ? `<span style="font-size:11px;color:var(--muted);margin-top:3px;">🔗 ${s.infoLink}</span>` : `<span style="font-size:11px;color:var(--muted);margin-top:3px;opacity:0.5;">Info → contactformulier</span>`}
         </div>
         <div class="show-actions">
           <button class="btn btn-ghost" onclick="openEdit('${s.id}')">Bewerken</button>
@@ -688,13 +699,14 @@
 
   // ── Add show ─────────────────────────────────────────────────
   function addShow() {
-    const day     = document.getElementById('new-day').value.trim();
-    const month   = document.getElementById('new-month').value;
-    const year    = document.getElementById('new-year').value.trim();
-    const weekday = document.getElementById('new-weekday').value;
-    const venue   = document.getElementById('new-venue').value.trim();
-    const city    = document.getElementById('new-city').value.trim();
-    const errEl   = document.getElementById('add-error');
+    const day      = document.getElementById('new-day').value.trim();
+    const month    = document.getElementById('new-month').value;
+    const year     = document.getElementById('new-year').value.trim();
+    const weekday  = document.getElementById('new-weekday').value;
+    const venue    = document.getElementById('new-venue').value.trim();
+    const city     = document.getElementById('new-city').value.trim();
+    const infoLink = document.getElementById('new-infolink').value.trim();
+    const errEl    = document.getElementById('add-error');
 
     if (!day || !month || !year || !weekday || !venue || !city) {
       errEl.style.display = 'inline';
@@ -705,11 +717,11 @@
     shows.push({
       id:      Date.now().toString(),
       weekday, day: day.padStart(2, '0'),
-      month, year, venue, city
+      month, year, venue, city, infoLink
     });
 
     // Clear form
-    ['new-day','new-year','new-venue','new-city'].forEach(id =>
+    ['new-day','new-year','new-venue','new-city','new-infolink'].forEach(id =>
       document.getElementById(id).value = '');
     document.getElementById('new-month').value = '';
     document.getElementById('new-weekday').value = '';
@@ -732,13 +744,14 @@
   function openEdit(id) {
     const s = shows.find(s => s.id === id);
     if (!s) return;
-    document.getElementById('edit-id').value      = id;
-    document.getElementById('edit-day').value     = s.day;
-    document.getElementById('edit-month').value   = s.month;
-    document.getElementById('edit-year').value    = s.year;
-    document.getElementById('edit-weekday').value = s.weekday;
-    document.getElementById('edit-venue').value   = s.venue;
-    document.getElementById('edit-city').value    = s.city;
+    document.getElementById('edit-id').value        = id;
+    document.getElementById('edit-day').value       = s.day;
+    document.getElementById('edit-month').value     = s.month;
+    document.getElementById('edit-year').value      = s.year;
+    document.getElementById('edit-weekday').value   = s.weekday;
+    document.getElementById('edit-venue').value     = s.venue;
+    document.getElementById('edit-city').value      = s.city;
+    document.getElementById('edit-infolink').value  = s.infoLink || '';
     document.getElementById('modal-overlay').classList.add('open');
   }
 
@@ -747,13 +760,14 @@
   }
 
   function saveEdit() {
-    const id      = document.getElementById('edit-id').value;
-    const day     = document.getElementById('edit-day').value.trim();
-    const month   = document.getElementById('edit-month').value;
-    const year    = document.getElementById('edit-year').value.trim();
-    const weekday = document.getElementById('edit-weekday').value;
-    const venue   = document.getElementById('edit-venue').value.trim();
-    const city    = document.getElementById('edit-city').value.trim();
+    const id       = document.getElementById('edit-id').value;
+    const day      = document.getElementById('edit-day').value.trim();
+    const month    = document.getElementById('edit-month').value;
+    const year     = document.getElementById('edit-year').value.trim();
+    const weekday  = document.getElementById('edit-weekday').value;
+    const venue    = document.getElementById('edit-venue').value.trim();
+    const city     = document.getElementById('edit-city').value.trim();
+    const infoLink = document.getElementById('edit-infolink').value.trim();
 
     if (!day || !month || !year || !weekday || !venue || !city) {
       alert('Vul alle velden in.');
@@ -762,7 +776,7 @@
 
     const idx = shows.findIndex(s => s.id === id);
     if (idx !== -1) {
-      shows[idx] = { id, weekday, day: day.padStart(2, '0'), month, year, venue, city };
+      shows[idx] = { id, weekday, day: day.padStart(2, '0'), month, year, venue, city, infoLink };
     }
     closeModal();
     renderShows();
