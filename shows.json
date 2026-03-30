@@ -6,8 +6,8 @@
     "month": "APR",
     "year": "2025",
     "venue": "Bibliotheek Ieper",
-    "city": "Ieper, België",
-    "infoLink": ""
+    "city": "Ieper, BelgiÃ«",
+    "infoLink": "https://ieper.bibliotheek.be/bloedend-hart"
   },
   {
     "id": "2",
@@ -16,8 +16,8 @@
     "month": "APR",
     "year": "2025",
     "venue": "De Frontieren",
-    "city": "Westouter, België",
-    "infoLink": ""
+    "city": "Westouter, BelgiÃ«",
+    "infoLink": "https://www.frontieren.be/nl/bloedend-hart-pagina"
   },
   {
     "id": "3",
@@ -26,8 +26,8 @@
     "month": "MEI",
     "year": "2025",
     "venue": "Folk Center Dranouter",
-    "city": "Dranouter, België",
-    "infoLink": ""
+    "city": "Dranouter, BelgiÃ«",
+    "infoLink": "https://www.muziekcentrumdranouter.be/nl/concert/2026-05-02/grand-concert-2026-bloedend-hart-uitverkocht"
   },
   {
     "id": "4",
@@ -36,7 +36,7 @@
     "month": "MEI",
     "year": "2025",
     "venue": "Vlamertinge",
-    "city": "Vlamertinge, België",
+    "city": "Vlamertinge, BelgiÃ«",
     "infoLink": ""
   }
 ]
