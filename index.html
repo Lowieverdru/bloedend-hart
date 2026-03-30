@@ -97,64 +97,9 @@
     <div class="container">
       <span class="label label-red">Live</span>
       <h2>Shows</h2>
-      <div class="shows-list">
-
-        <div class="show-item">
-          <div class="show-date">
-            <span class="show-day">23</span>
-            <span class="show-month">APR</span>
-            <span class="show-year">2025</span>
-          </div>
-          <div class="show-info">
-            <span class="show-venue">Bibliotheek Ieper</span>
-            <span class="show-city">Ieper, België</span>
-            <span class="show-day-label">Donderdag</span>
-          </div>
-          <a href="#contact" class="btn btn-sm btn-outline">Info</a>
-        </div>
-
-        <div class="show-item">
-          <div class="show-date">
-            <span class="show-day">25</span>
-            <span class="show-month">APR</span>
-            <span class="show-year">2025</span>
-          </div>
-          <div class="show-info">
-            <span class="show-venue">De Frontieren</span>
-            <span class="show-city">Westouter, België</span>
-            <span class="show-day-label">Zaterdag</span>
-          </div>
-          <a href="#contact" class="btn btn-sm btn-outline">Info</a>
-        </div>
-
-        <div class="show-item">
-          <div class="show-date">
-            <span class="show-day">02</span>
-            <span class="show-month">MEI</span>
-            <span class="show-year">2025</span>
-          </div>
-          <div class="show-info">
-            <span class="show-venue">Folk Center Dranouter</span>
-            <span class="show-city">Dranouter, België</span>
-            <span class="show-day-label">Zaterdag</span>
-          </div>
-          <a href="#contact" class="btn btn-sm btn-outline">Info</a>
-        </div>
-
-        <div class="show-item">
-          <div class="show-date">
-            <span class="show-day">10</span>
-            <span class="show-month">MEI</span>
-            <span class="show-year">2025</span>
-          </div>
-          <div class="show-info">
-            <span class="show-venue">Vlamertinge</span>
-            <span class="show-city">Vlamertinge, België</span>
-            <span class="show-day-label">Zondag</span>
-          </div>
-          <a href="#contact" class="btn btn-sm btn-outline">Info</a>
-        </div>
-
+      <div class="shows-list" id="shows-list">
+        <!-- Shows worden geladen vanuit shows.json -->
+        <p class="shows-loading" style="color:var(--muted);font-size:14px;">Shows worden geladen…</p>
       </div>
       <p class="shows-note">Meer shows volgen. Blijf op de hoogte via <a href="https://www.facebook.com/p/Bloedend-Hart-100063105645230/" target="_blank" rel="noopener">Facebook</a>.</p>
     </div>
@@ -366,6 +311,40 @@
       }, 5000);
     });
 
+    // ── Shows laden vanuit shows.json ──────────────────────────
+    async function loadShows() {
+      const list = document.getElementById('shows-list');
+      try {
+        const res = await fetch('./shows.json?_=' + Date.now());
+        const shows = await res.json();
+        if (!shows.length) {
+          list.innerHTML = '<p style="color:var(--muted);font-size:14px;">Momenteel geen shows gepland.</p>';
+          return;
+        }
+        list.innerHTML = shows.map(s => `
+          <div class="show-item">
+            <div class="show-date">
+              <span class="show-day">${s.day}</span>
+              <span class="show-month">${s.month}</span>
+              <span class="show-year">${s.year}</span>
+            </div>
+            <div class="show-info">
+              <span class="show-venue">${s.venue}</span>
+              <span class="show-city">${s.city}</span>
+              <span class="show-day-label">${s.weekday}</span>
+            </div>
+            <a href="#contact" class="btn btn-sm btn-outline">Info</a>
+          </div>`).join('');
+        // fade-in on newly created items
+        list.querySelectorAll('.show-item').forEach(el => {
+          el.classList.add('fade-in');
+          observer.observe(el);
+        });
+      } catch (err) {
+        list.innerHTML = '<p style="color:var(--muted);font-size:14px;">Shows konden niet worden geladen.</p>';
+      }
+    }
+
     // Intersection observer for fade-in
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
@@ -374,10 +353,12 @@
         }
       });
     }, { threshold: 0.1 });
-    document.querySelectorAll('.show-item, .gallery-item, .album-card, .over-grid, .muziek-grid, .contact-grid').forEach(el => {
+    document.querySelectorAll('.gallery-item, .album-card, .over-grid, .muziek-grid, .contact-grid').forEach(el => {
       el.classList.add('fade-in');
       observer.observe(el);
     });
+
+    loadShows();
   </script>
 
 </body>
