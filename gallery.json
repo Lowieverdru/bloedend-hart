@@ -1,17 +1,92 @@
 [
-  { "id": "r76",   "path": "Bloedend Hart/foto BH Reningelst/2026-02-22 - Bloedend Hart  (76).JPG", "alt": "Bloedend Hart live", "size": "wide" },
-  { "id": "lo772", "path": "Bloedend Hart/Bloedend Hart - Lo/8A7A4772.jpg", "alt": "Bloedend Hart live", "size": "tall" },
-  { "id": "lo734", "path": "Bloedend Hart/Bloedend Hart - Lo/8A7A4734.jpg", "alt": "Bloedend Hart live", "size": "" },
-  { "id": "r68",   "path": "Bloedend Hart/foto BH Reningelst/2026-02-22 - Bloedend Hart  (68).JPG", "alt": "Bloedend Hart live", "size": "tall" },
-  { "id": "r38",   "path": "Bloedend Hart/foto BH Reningelst/2026-02-22 - Bloedend Hart  (38).JPG", "alt": "Bloedend Hart live", "size": "" },
-  { "id": "lo824", "path": "Bloedend Hart/Bloedend Hart - Lo/8A7A4824.jpg", "alt": "Bloedend Hart live", "size": "" },
-  { "id": "lo835", "path": "Bloedend Hart/Bloedend Hart - Lo/8A7A4835.jpg", "alt": "Bloedend Hart live", "size": "tall" },
-  { "id": "r52",   "path": "Bloedend Hart/foto BH Reningelst/2026-02-22 - Bloedend Hart  (52).JPG", "alt": "Bloedend Hart live", "size": "tall" },
-  { "id": "lo854", "path": "Bloedend Hart/Bloedend Hart - Lo/8A7A4854.jpg", "alt": "Bloedend Hart live", "size": "" },
-  { "id": "r70",   "path": "Bloedend Hart/foto BH Reningelst/2026-02-22 - Bloedend Hart  (70).JPG", "alt": "Bloedend Hart live", "size": "" },
-  { "id": "lo880", "path": "Bloedend Hart/Bloedend Hart - Lo/8A7A4880.jpg", "alt": "Bloedend Hart live", "size": "wide" },
-  { "id": "lo925", "path": "Bloedend Hart/Bloedend Hart - Lo/8A7A4925.jpg", "alt": "Bloedend Hart live", "size": "tall" },
-  { "id": "lo821", "path": "Bloedend Hart/Bloedend Hart - Lo/8A7A4821.jpg", "alt": "Bloedend Hart live", "size": "" },
-  { "id": "lo900", "path": "Bloedend Hart/Bloedend Hart - Lo/8A7A4900.jpg", "alt": "Bloedend Hart live", "size": "" },
-  { "id": "lo916", "path": "Bloedend Hart/Bloedend Hart - Lo/8A7A4916.jpg", "alt": "Bloedend Hart live", "size": "" }
+  {
+    "id": "lo772",
+    "path": "Bloedend Hart/Bloedend Hart - Lo/8A7A4772.jpg",
+    "alt": "Bloedend Hart live",
+    "size": "tall"
+  },
+  {
+    "id": "r76",
+    "path": "Bloedend Hart/foto BH Reningelst/2026-02-22 - Bloedend Hart  (76).JPG",
+    "alt": "Bloedend Hart live",
+    "size": "wide"
+  },
+  {
+    "id": "lo734",
+    "path": "Bloedend Hart/Bloedend Hart - Lo/8A7A4734.jpg",
+    "alt": "Bloedend Hart live",
+    "size": ""
+  },
+  {
+    "id": "r68",
+    "path": "Bloedend Hart/foto BH Reningelst/2026-02-22 - Bloedend Hart  (68).JPG",
+    "alt": "Bloedend Hart live",
+    "size": "tall"
+  },
+  {
+    "id": "r38",
+    "path": "Bloedend Hart/foto BH Reningelst/2026-02-22 - Bloedend Hart  (38).JPG",
+    "alt": "Bloedend Hart live",
+    "size": ""
+  },
+  {
+    "id": "lo824",
+    "path": "Bloedend Hart/Bloedend Hart - Lo/8A7A4824.jpg",
+    "alt": "Bloedend Hart live",
+    "size": ""
+  },
+  {
+    "id": "lo835",
+    "path": "Bloedend Hart/Bloedend Hart - Lo/8A7A4835.jpg",
+    "alt": "Bloedend Hart live",
+    "size": ""
+  },
+  {
+    "id": "r52",
+    "path": "Bloedend Hart/foto BH Reningelst/2026-02-22 - Bloedend Hart  (52).JPG",
+    "alt": "Bloedend Hart live",
+    "size": "tall"
+  },
+  {
+    "id": "lo854",
+    "path": "Bloedend Hart/Bloedend Hart - Lo/8A7A4854.jpg",
+    "alt": "Bloedend Hart live",
+    "size": ""
+  },
+  {
+    "id": "r70",
+    "path": "Bloedend Hart/foto BH Reningelst/2026-02-22 - Bloedend Hart  (70).JPG",
+    "alt": "Bloedend Hart live",
+    "size": ""
+  },
+  {
+    "id": "lo880",
+    "path": "Bloedend Hart/Bloedend Hart - Lo/8A7A4880.jpg",
+    "alt": "Bloedend Hart live",
+    "size": "wide"
+  },
+  {
+    "id": "lo925",
+    "path": "Bloedend Hart/Bloedend Hart - Lo/8A7A4925.jpg",
+    "alt": "Bloedend Hart live",
+    "size": "tall"
+  },
+  {
+    "id": "lo821",
+    "path": "Bloedend Hart/Bloedend Hart - Lo/8A7A4821.jpg",
+    "alt": "Bloedend Hart live",
+    "size": ""
+  },
+  {
+    "id": "lo900",
+    "path": "Bloedend Hart/Bloedend Hart - Lo/8A7A4900.jpg",
+    "alt": "Bloedend Hart live",
+    "size": ""
+  },
+  {
+    "id": "lo916",
+    "path": "Bloedend Hart/Bloedend Hart - Lo/8A7A4916.jpg",
+    "alt": "Bloedend Hart live",
+    "size": ""
+  }
 ]
