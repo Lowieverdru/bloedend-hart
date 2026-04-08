@@ -3,381 +3,198 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Bloedend Hart — Shows Beheren</title>
+  <title>Bloedend Hart — CMS</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.css" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
-      --bg:      #0a0a0a;
-      --bg-2:    #111111;
-      --bg-3:    #1a1a1a;
-      --red:     #c0392b;
-      --red-h:   #e74c3c;
-      --white:   #f5f5f5;
-      --muted:   rgba(255,255,255,0.4);
-      --border:  rgba(255,255,255,0.08);
-      --green:   #27ae60;
-      --radius:  6px;
+      --bg:     #0a0a0a;
+      --bg-2:   #111111;
+      --bg-3:   #1a1a1a;
+      --red:    #c0392b;
+      --red-h:  #e74c3c;
+      --white:  #f5f5f5;
+      --muted:  rgba(255,255,255,0.4);
+      --border: rgba(255,255,255,0.08);
+      --green:  #27ae60;
+      --radius: 6px;
     }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--white); min-height: 100vh; }
 
-    body {
-      font-family: 'Inter', sans-serif;
-      background: var(--bg);
-      color: var(--white);
-      min-height: 100vh;
-    }
+    /* ── Login ─────────────────────────────────────────────── */
+    #login-screen { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 24px; }
+    .login-box { background: var(--bg-2); border: 1px solid var(--border); padding: 48px 40px; width: 100%; max-width: 420px; }
+    .login-box h1 { font-family: 'Bebas Neue', sans-serif; font-size: 32px; letter-spacing: .05em; margin-bottom: 6px; }
+    .login-box p { color: var(--muted); font-size: 13px; margin-bottom: 32px; }
+    .login-label { font-size: 11px; font-weight: 600; letter-spacing: .15em; text-transform: uppercase; color: var(--muted); display: block; margin-bottom: 8px; }
+    .login-hint  { font-size: 12px; color: var(--muted); margin-bottom: 24px; line-height: 1.6; }
+    .login-input { background: transparent; border: none; border-bottom: 1px solid var(--border); color: var(--white); font-family: 'Inter', sans-serif; font-size: 15px; padding: 12px 0; outline: none; width: 100%; transition: border-color .2s; margin-bottom: 20px; }
+    .login-input:focus { border-bottom-color: var(--white); }
+    .login-error { color: var(--red-h); font-size: 13px; margin-top: 12px; display: none; }
 
-    /* ── Login screen ─────────────────────────────────── */
-    #login-screen {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      padding: 24px;
-    }
-    .login-box {
-      background: var(--bg-2);
-      border: 1px solid var(--border);
-      padding: 48px 40px;
-      width: 100%;
-      max-width: 420px;
-    }
-    .login-box h1 {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 32px;
-      letter-spacing: 0.05em;
-      margin-bottom: 6px;
-    }
-    .login-box p {
-      color: var(--muted);
-      font-size: 13px;
-      margin-bottom: 32px;
-    }
-    .login-error {
-      color: var(--red-h);
-      font-size: 13px;
-      margin-top: 12px;
-      display: none;
-    }
-
-    /* ── Main app ─────────────────────────────────────── */
+    /* ── App shell ─────────────────────────────────────────── */
     #app { display: none; }
-
-    .topbar {
-      background: var(--bg-2);
-      border-bottom: 1px solid var(--border);
-      padding: 0 32px;
-      height: 60px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-    .topbar-logo {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 20px;
-      letter-spacing: 0.08em;
-    }
+    .topbar { background: var(--bg-2); border-bottom: 1px solid var(--border); padding: 0 32px; height: 60px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+    .topbar-logo { font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: .08em; }
     .topbar-logo span { color: var(--red); }
     .topbar-right { display: flex; align-items: center; gap: 16px; }
-    .topbar-right a {
-      font-size: 13px;
-      color: var(--muted);
-      text-decoration: none;
-      transition: color 0.2s;
-    }
+    .topbar-right a { font-size: 13px; color: var(--muted); text-decoration: none; transition: color .2s; }
     .topbar-right a:hover { color: var(--white); }
-    .btn-logout {
-      font-size: 12px;
-      font-weight: 600;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--muted);
-      background: none;
-      border: 1px solid var(--border);
-      padding: 7px 14px;
-      cursor: pointer;
-      font-family: 'Inter', sans-serif;
-      transition: color 0.2s, border-color 0.2s;
-    }
-    .btn-logout:hover { color: var(--white); border-color: rgba(255,255,255,0.25); }
+    .btn-logout { font-size: 12px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); background: none; border: 1px solid var(--border); padding: 7px 14px; cursor: pointer; font-family: 'Inter', sans-serif; transition: color .2s, border-color .2s; }
+    .btn-logout:hover { color: var(--white); border-color: rgba(255,255,255,.25); }
 
-    .main { max-width: 860px; margin: 0 auto; padding: 48px 24px 80px; }
+    /* ── Tabs ──────────────────────────────────────────────── */
+    .tab-nav { display: flex; border-bottom: 1px solid var(--border); background: var(--bg-2); padding: 0 32px; gap: 0; }
+    .tab-btn { font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); background: none; border: none; border-bottom: 2px solid transparent; padding: 16px 20px; cursor: pointer; transition: color .2s, border-color .2s; margin-bottom: -1px; }
+    .tab-btn.active { color: var(--white); border-bottom-color: var(--red); }
+    .tab-btn:hover:not(.active) { color: rgba(255,255,255,.7); }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
 
-    .page-title {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 40px;
-      letter-spacing: 0.04em;
-      margin-bottom: 8px;
-    }
+    /* ── Main content ──────────────────────────────────────── */
+    .main { max-width: 900px; margin: 0 auto; padding: 48px 24px 120px; }
+    .page-title { font-family: 'Bebas Neue', sans-serif; font-size: 40px; letter-spacing: .04em; margin-bottom: 8px; }
     .page-sub { color: var(--muted); font-size: 14px; margin-bottom: 48px; }
 
-    /* ── Cards / sections ─────────────────────────────── */
-    .card {
-      background: var(--bg-2);
-      border: 1px solid var(--border);
-      padding: 32px;
-      margin-bottom: 32px;
-    }
-    .card-title {
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 24px;
-    }
+    /* ── Cards ─────────────────────────────────────────────── */
+    .card { background: var(--bg-2); border: 1px solid var(--border); padding: 32px; margin-bottom: 32px; }
+    .card-title { font-size: 11px; font-weight: 600; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); margin-bottom: 24px; }
 
-    /* ── Show rows ────────────────────────────────────── */
-    .show-row {
-      display: grid;
-      grid-template-columns: 80px 1fr auto;
-      align-items: center;
-      gap: 20px;
-      padding: 18px 0;
-      border-bottom: 1px solid var(--border);
-    }
-    .show-row:last-child { border-bottom: none; padding-bottom: 0; }
-    .show-row:first-of-type { padding-top: 0; }
-    .show-date-badge {
-      text-align: center;
-      line-height: 1;
-    }
-    .show-date-badge .day {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 36px;
-      line-height: 1;
-    }
-    .show-date-badge .month {
-      font-size: 10px;
-      font-weight: 600;
-      letter-spacing: 0.15em;
-      color: var(--red);
-      text-transform: uppercase;
-    }
-    .show-date-badge .year {
-      font-size: 10px;
-      color: var(--muted);
-    }
-    .show-details { display: flex; flex-direction: column; gap: 2px; }
-    .show-details .venue { font-size: 15px; font-weight: 600; }
-    .show-details .city  { font-size: 12px; color: var(--muted); }
-    .show-details .wd    { font-size: 11px; color: var(--red); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 2px; }
-    .show-actions { display: flex; gap: 8px; }
-
-    /* ── Buttons ──────────────────────────────────────── */
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      font-family: 'Inter', sans-serif;
-      font-size: 12px;
-      font-weight: 600;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      padding: 9px 18px;
-      cursor: pointer;
-      border: none;
-      transition: opacity 0.2s, background 0.2s;
-    }
-    .btn:disabled { opacity: 0.45; cursor: default; }
+    /* ── Buttons ───────────────────────────────────────────── */
+    .btn { display: inline-flex; align-items: center; gap: 8px; font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; padding: 9px 18px; cursor: pointer; border: none; transition: opacity .2s, background .2s; }
+    .btn:disabled { opacity: .45; cursor: default; }
     .btn-red    { background: var(--red); color: #fff; }
     .btn-red:hover:not(:disabled) { background: var(--red-h); }
     .btn-ghost  { background: transparent; color: var(--muted); border: 1px solid var(--border); }
-    .btn-ghost:hover:not(:disabled) { color: var(--white); border-color: rgba(255,255,255,0.25); }
-    .btn-danger { background: transparent; color: #e74c3c; border: 1px solid rgba(231,76,60,0.3); }
-    .btn-danger:hover:not(:disabled) { background: rgba(231,76,60,0.08); }
+    .btn-ghost:hover:not(:disabled) { color: var(--white); border-color: rgba(255,255,255,.25); }
+    .btn-danger { background: transparent; color: #e74c3c; border: 1px solid rgba(231,76,60,.3); }
+    .btn-danger:hover:not(:disabled) { background: rgba(231,76,60,.08); }
+    .btn-sm { padding: 6px 12px; font-size: 11px; }
 
-    /* ── Form ─────────────────────────────────────────── */
-    .form-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 20px;
-    }
+    /* ── Form ──────────────────────────────────────────────── */
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
     .form-row.three { grid-template-columns: 1fr 1fr 1fr; }
-    @media (max-width: 600px) {
-      .form-row, .form-row.three { grid-template-columns: 1fr; }
-    }
+    @media (max-width: 600px) { .form-row, .form-row.three { grid-template-columns: 1fr; } }
     .form-group { display: flex; flex-direction: column; gap: 8px; }
-    .form-group label {
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--muted);
-    }
-    .form-group input,
-    .form-group select {
-      background: transparent;
-      border: none;
-      border-bottom: 1px solid var(--border);
-      color: var(--white);
-      font-family: 'Inter', sans-serif;
-      font-size: 15px;
-      padding: 10px 0;
-      outline: none;
-      width: 100%;
-      transition: border-color 0.2s;
-      -webkit-appearance: none;
-    }
-    .form-group select {
-      background: var(--bg-3);
-      padding: 10px 8px;
-      border: 1px solid var(--border);
-      cursor: pointer;
-    }
+    .form-group label { font-size: 11px; font-weight: 600; letter-spacing: .15em; text-transform: uppercase; color: var(--muted); }
+    .form-group input, .form-group select { background: transparent; border: none; border-bottom: 1px solid var(--border); color: var(--white); font-family: 'Inter', sans-serif; font-size: 15px; padding: 10px 0; outline: none; width: 100%; transition: border-color .2s; -webkit-appearance: none; }
+    .form-group select { background: var(--bg-3); padding: 10px 8px; border: 1px solid var(--border); cursor: pointer; }
     .form-group select option { background: var(--bg-3); }
-    .form-group input:focus,
-    .form-group select:focus { border-bottom-color: var(--white); }
+    .form-group input:focus, .form-group select:focus { border-bottom-color: var(--white); }
     .form-group input::placeholder { color: var(--muted); }
-    .form-footer {
-      margin-top: 28px;
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      flex-wrap: wrap;
-    }
+    .form-footer { margin-top: 28px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
 
-    /* ── Status toast ─────────────────────────────────── */
-    #toast {
-      position: fixed;
-      bottom: 32px;
-      right: 32px;
-      padding: 14px 22px;
-      font-size: 13px;
-      font-weight: 500;
-      border-left: 3px solid var(--green);
-      background: var(--bg-3);
-      color: var(--white);
-      display: none;
-      z-index: 9999;
-      animation: slideIn 0.25s ease;
-      max-width: 340px;
-    }
+    /* ── Show rows ─────────────────────────────────────────── */
+    .show-row { display: grid; grid-template-columns: 80px 1fr auto; align-items: center; gap: 20px; padding: 18px 0; border-bottom: 1px solid var(--border); }
+    .show-row:last-child { border-bottom: none; padding-bottom: 0; }
+    .show-row:first-of-type { padding-top: 0; }
+    .show-date-badge { text-align: center; line-height: 1; }
+    .show-date-badge .day   { font-family: 'Bebas Neue', sans-serif; font-size: 36px; line-height: 1; }
+    .show-date-badge .month { font-size: 10px; font-weight: 600; letter-spacing: .15em; color: var(--red); text-transform: uppercase; }
+    .show-date-badge .year  { font-size: 10px; color: var(--muted); }
+    .show-details { display: flex; flex-direction: column; gap: 2px; }
+    .show-details .venue { font-size: 15px; font-weight: 600; }
+    .show-details .city  { font-size: 12px; color: var(--muted); }
+    .show-details .wd    { font-size: 11px; color: var(--red); text-transform: uppercase; letter-spacing: .1em; margin-top: 2px; }
+    .show-actions { display: flex; gap: 8px; }
+
+    /* ── Photo grid ────────────────────────────────────────── */
+    .photo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; }
+    .photo-card { background: var(--bg-3); border: 1px solid var(--border); overflow: hidden; position: relative; border-radius: var(--radius); transition: border-color .2s; }
+    .photo-card:hover { border-color: rgba(255,255,255,.2); }
+    .photo-thumb { width: 100%; aspect-ratio: 4/3; object-fit: cover; object-position: top; display: block; }
+    .photo-controls { padding: 10px; display: flex; flex-direction: column; gap: 8px; }
+    .photo-size-btns { display: flex; gap: 4px; }
+    .size-btn { flex: 1; font-family: 'Inter', sans-serif; font-size: 10px; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; padding: 5px 4px; background: var(--bg-2); border: 1px solid var(--border); color: var(--muted); cursor: pointer; border-radius: 3px; transition: all .2s; }
+    .size-btn.active { background: var(--red); border-color: var(--red); color: #fff; }
+    .size-btn:hover:not(.active) { border-color: rgba(255,255,255,.25); color: var(--white); }
+    .photo-bottom { display: flex; align-items: center; justify-content: space-between; }
+    .photo-move-btns { display: flex; gap: 4px; }
+    .move-btn { width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; background: var(--bg-2); border: 1px solid var(--border); color: var(--muted); cursor: pointer; border-radius: 3px; transition: all .2s; font-size: 12px; }
+    .move-btn:hover { color: var(--white); border-color: rgba(255,255,255,.25); }
+    .photo-label { font-size: 10px; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 80px; }
+
+    /* ── Upload zone ───────────────────────────────────────── */
+    .upload-zone { border: 2px dashed var(--border); padding: 40px; text-align: center; cursor: pointer; transition: border-color .2s, background .2s; border-radius: var(--radius); }
+    .upload-zone:hover, .upload-zone.drag-over { border-color: var(--red); background: rgba(192,57,43,.05); }
+    .upload-zone p { color: var(--muted); font-size: 14px; margin-top: 12px; }
+    .upload-zone span { font-size: 11px; color: var(--muted); opacity: .6; margin-top: 6px; display: block; }
+
+    /* ── Crop modal ────────────────────────────────────────── */
+    #crop-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.9); display: none; flex-direction: column; z-index: 600; }
+    #crop-overlay.open { display: flex; }
+    .crop-header { display: flex; align-items: center; justify-content: space-between; padding: 16px 24px; border-bottom: 1px solid var(--border); flex-shrink: 0; }
+    .crop-header h2 { font-family: 'Bebas Neue', sans-serif; font-size: 24px; letter-spacing: .04em; }
+    .crop-body { display: flex; flex: 1; overflow: hidden; gap: 0; }
+    .crop-canvas-wrap { flex: 1; display: flex; align-items: center; justify-content: center; overflow: hidden; background: #000; padding: 20px; }
+    #crop-image { max-width: 100%; max-height: 100%; display: block; }
+    .crop-sidebar { width: 260px; border-left: 1px solid var(--border); padding: 24px; display: flex; flex-direction: column; gap: 24px; overflow-y: auto; flex-shrink: 0; background: var(--bg-2); }
+    .crop-section-title { font-size: 11px; font-weight: 600; letter-spacing: .15em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
+    .crop-btn-group { display: flex; flex-wrap: wrap; gap: 6px; }
+    .crop-ctrl-btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; padding: 8px 12px; background: var(--bg-3); border: 1px solid var(--border); color: var(--muted); cursor: pointer; border-radius: 3px; transition: all .2s; white-space: nowrap; }
+    .crop-ctrl-btn:hover { color: var(--white); border-color: rgba(255,255,255,.25); }
+    .crop-ctrl-btn.active { background: var(--red); border-color: var(--red); color: #fff; }
+    .crop-size-group { display: flex; flex-direction: column; gap: 6px; }
+    .crop-size-btn { width: 100%; text-align: left; padding: 10px 14px; background: var(--bg-3); border: 1px solid var(--border); color: var(--muted); cursor: pointer; font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 600; letter-spacing: .05em; border-radius: 3px; transition: all .2s; }
+    .crop-size-btn.active { background: rgba(192,57,43,.15); border-color: var(--red); color: var(--white); }
+    .crop-size-btn:hover:not(.active) { color: var(--white); border-color: rgba(255,255,255,.25); }
+    .crop-size-desc { font-size: 11px; color: var(--muted); margin-top: 2px; font-weight: 400; display: block; }
+    .crop-footer { border-top: 1px solid var(--border); padding: 16px 24px; display: flex; gap: 12px; align-items: center; flex-shrink: 0; }
+    .crop-filename { font-size: 12px; color: var(--muted); flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    #crop-progress { font-size: 13px; color: var(--green); display: none; }
+
+    /* ── Toast ─────────────────────────────────────────────── */
+    #toast { position: fixed; bottom: 32px; right: 32px; padding: 14px 22px; font-size: 13px; font-weight: 500; border-left: 3px solid var(--green); background: var(--bg-3); color: var(--white); display: none; z-index: 9999; animation: slideIn .25s ease; max-width: 340px; }
     #toast.error { border-color: var(--red-h); }
-    @keyframes slideIn {
-      from { opacity: 0; transform: translateY(12px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
+    @keyframes slideIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
 
-    /* ── Edit modal ───────────────────────────────────── */
-    #modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.7);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 500;
-      padding: 24px;
-    }
+    /* ── Modal (shows edit) ────────────────────────────────── */
+    #modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.7); display: none; align-items: center; justify-content: center; z-index: 500; padding: 24px; }
     #modal-overlay.open { display: flex; }
-    .modal {
-      background: var(--bg-2);
-      border: 1px solid var(--border);
-      padding: 40px;
-      width: 100%;
-      max-width: 580px;
-    }
-    .modal h2 {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 28px;
-      letter-spacing: 0.04em;
-      margin-bottom: 28px;
-    }
+    .modal { background: var(--bg-2); border: 1px solid var(--border); padding: 40px; width: 100%; max-width: 580px; }
+    .modal h2 { font-family: 'Bebas Neue', sans-serif; font-size: 28px; letter-spacing: .04em; margin-bottom: 28px; }
 
-    /* ── Save bar ─────────────────────────────────────── */
-    #save-bar {
-      position: sticky;
-      bottom: 0;
-      background: var(--bg-2);
-      border-top: 1px solid var(--border);
-      padding: 16px 24px;
-      display: none;
-      align-items: center;
-      gap: 16px;
-      z-index: 200;
-    }
+    /* ── Save bar ──────────────────────────────────────────── */
+    #save-bar { position: sticky; bottom: 0; background: var(--bg-2); border-top: 1px solid var(--border); padding: 16px 24px; display: none; align-items: center; gap: 16px; z-index: 200; }
     #save-bar.visible { display: flex; }
     .save-bar-msg { font-size: 13px; color: var(--muted); }
 
-    /* ── Empty state ──────────────────────────────────── */
-    .empty-state {
-      text-align: center;
-      padding: 40px;
-      color: var(--muted);
-      font-size: 14px;
-    }
-
-    /* login inputs */
-    .login-input {
-      background: transparent;
-      border: none;
-      border-bottom: 1px solid var(--border);
-      color: var(--white);
-      font-family: 'Inter', sans-serif;
-      font-size: 15px;
-      padding: 12px 0;
-      outline: none;
-      width: 100%;
-      transition: border-color 0.2s;
-      margin-bottom: 20px;
-    }
-    .login-input:focus { border-bottom-color: var(--white); }
-    .login-label {
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--muted);
-      display: block;
-      margin-bottom: 8px;
-    }
-    .login-hint {
-      font-size: 12px;
-      color: var(--muted);
-      margin-bottom: 24px;
-      line-height: 1.6;
+    /* ── Misc ──────────────────────────────────────────────── */
+    .empty-state { text-align: center; padding: 40px; color: var(--muted); font-size: 14px; }
+    @media (max-width: 700px) {
+      .crop-body { flex-direction: column; }
+      .crop-sidebar { width: 100%; border-left: none; border-top: 1px solid var(--border); }
     }
   </style>
 </head>
 <body>
 
-<!-- ══════════════════════════════════════════════════════════
-     LOGIN SCREEN
-══════════════════════════════════════════════════════════ -->
+<!-- ═══════════════════════════════════════════════════════════
+     LOGIN
+═══════════════════════════════════════════════════════════ -->
 <div id="login-screen">
   <div class="login-box">
     <h1>BLOEDEND HART</h1>
-    <p>Shows beheren — Toegang vereist</p>
-
+    <p>CMS — Toegang vereist</p>
     <label class="login-label">Wachtwoord</label>
     <input class="login-input" type="password" id="login-password" placeholder="Voer wachtwoord in" />
-
     <label class="login-label">GitHub Token</label>
-    <p class="login-hint">
-      Nodig om shows op te slaan op GitHub.<br>
-      Het token wordt lokaal opgeslagen in je browser.
-    </p>
+    <p class="login-hint">Nodig om wijzigingen op te slaan op GitHub.<br>Wordt lokaal opgeslagen in je browser.</p>
     <input class="login-input" type="password" id="login-token" placeholder="ghp_..." />
-
-    <button class="btn btn-red" onclick="doLogin()" style="width:100%;justify-content:center;">
-      Inloggen
-    </button>
+    <button class="btn btn-red" onclick="doLogin()" style="width:100%;justify-content:center;">Inloggen</button>
     <p class="login-error" id="login-error">Ongeldig wachtwoord. Probeer opnieuw.</p>
   </div>
 </div>
 
-<!-- ══════════════════════════════════════════════════════════
+<!-- ═══════════════════════════════════════════════════════════
      APP
-══════════════════════════════════════════════════════════ -->
+═══════════════════════════════════════════════════════════ -->
 <div id="app">
 
+  <!-- Topbar -->
   <div class="topbar">
     <div class="topbar-logo">BLOEDEND <span>HART</span> — CMS</div>
     <div class="topbar-right">
@@ -386,159 +203,142 @@
     </div>
   </div>
 
+  <!-- Tab nav -->
+  <div class="tab-nav">
+    <button class="tab-btn active" onclick="switchTab('shows')">🎭 Shows</button>
+    <button class="tab-btn" onclick="switchTab('fotos')">📷 Foto's</button>
+  </div>
+
   <div class="main">
-    <div class="page-title">Shows Beheren</div>
-    <p class="page-sub">Voeg shows toe, bewerk of verwijder ze. Wijzigingen worden direct gepubliceerd op de website.</p>
 
-    <!-- Huidige shows -->
-    <div class="card">
-      <div class="card-title">Geplande Shows</div>
-      <div id="shows-container">
-        <div class="empty-state">Shows worden geladen…</div>
-      </div>
-    </div>
+    <!-- ─── SHOWS TAB ──────────────────────────────────────── -->
+    <div class="tab-panel active" id="tab-shows">
+      <div class="page-title">Shows Beheren</div>
+      <p class="page-sub">Voeg shows toe, bewerk of verwijder ze. Klik "Publiceren" om op te slaan.</p>
 
-    <!-- Nieuwe show toevoegen -->
-    <div class="card">
-      <div class="card-title">Nieuwe Show Toevoegen</div>
-      <div class="form-row three">
-        <div class="form-group">
-          <label>Dag *</label>
-          <input type="number" id="new-day" placeholder="bv. 23" min="1" max="31" />
+      <div class="card">
+        <div class="card-title">Geplande Shows</div>
+        <div id="shows-container"><div class="empty-state">Shows worden geladen…</div></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Nieuwe Show Toevoegen</div>
+        <div class="form-row three">
+          <div class="form-group"><label>Dag *</label><input type="number" id="new-day" placeholder="bv. 23" min="1" max="31" /></div>
+          <div class="form-group">
+            <label>Maand *</label>
+            <select id="new-month">
+              <option value="">— Kies maand —</option>
+              <option value="JAN">Januari</option><option value="FEB">Februari</option><option value="MRT">Maart</option>
+              <option value="APR">April</option><option value="MEI">Mei</option><option value="JUN">Juni</option>
+              <option value="JUL">Juli</option><option value="AUG">Augustus</option><option value="SEP">September</option>
+              <option value="OKT">Oktober</option><option value="NOV">November</option><option value="DEC">December</option>
+            </select>
+          </div>
+          <div class="form-group"><label>Jaar *</label><input type="number" id="new-year" placeholder="bv. 2025" min="2024" max="2035" /></div>
         </div>
-        <div class="form-group">
-          <label>Maand *</label>
-          <select id="new-month">
-            <option value="">— Kies maand —</option>
-            <option value="JAN">Januari</option>
-            <option value="FEB">Februari</option>
-            <option value="MRT">Maart</option>
-            <option value="APR">April</option>
-            <option value="MEI">Mei</option>
-            <option value="JUN">Juni</option>
-            <option value="JUL">Juli</option>
-            <option value="AUG">Augustus</option>
-            <option value="SEP">September</option>
-            <option value="OKT">Oktober</option>
-            <option value="NOV">November</option>
-            <option value="DEC">December</option>
-          </select>
+        <div class="form-row" style="margin-top:20px;">
+          <div class="form-group">
+            <label>Weekdag *</label>
+            <select id="new-weekday">
+              <option value="">— Kies dag —</option>
+              <option>Maandag</option><option>Dinsdag</option><option>Woensdag</option><option>Donderdag</option>
+              <option>Vrijdag</option><option>Zaterdag</option><option>Zondag</option>
+            </select>
+          </div>
+          <div class="form-group"><label>Locatie / Zaal *</label><input type="text" id="new-venue" placeholder="bv. De Frontieren" /></div>
         </div>
-        <div class="form-group">
-          <label>Jaar *</label>
-          <input type="number" id="new-year" placeholder="bv. 2025" min="2024" max="2030" />
+        <div class="form-row" style="margin-top:20px;">
+          <div class="form-group"><label>Stad *</label><input type="text" id="new-city" placeholder="bv. Westouter, België" /></div>
+          <div class="form-group">
+            <label>Info-knop link <span style="text-transform:none;font-weight:400;letter-spacing:0">(optioneel)</span></label>
+            <input type="text" id="new-infolink" placeholder="https://… of e-mailadres" />
+            <span style="font-size:11px;color:var(--muted);margin-top:4px;">Leeg = verwijst naar contactformulier</span>
+          </div>
+        </div>
+        <div class="form-footer">
+          <button class="btn btn-red" onclick="addShow()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Show toevoegen
+          </button>
+          <span id="add-error" style="font-size:13px;color:#e74c3c;display:none;">Vul alle verplichte velden in.</span>
         </div>
       </div>
-      <div class="form-row" style="margin-top:20px;">
-        <div class="form-group">
-          <label>Weekdag *</label>
-          <select id="new-weekday">
-            <option value="">— Kies dag —</option>
-            <option value="Maandag">Maandag</option>
-            <option value="Dinsdag">Dinsdag</option>
-            <option value="Woensdag">Woensdag</option>
-            <option value="Donderdag">Donderdag</option>
-            <option value="Vrijdag">Vrijdag</option>
-            <option value="Zaterdag">Zaterdag</option>
-            <option value="Zondag">Zondag</option>
-          </select>
+    </div><!-- /tab-shows -->
+
+    <!-- ─── FOTO'S TAB ─────────────────────────────────────── -->
+    <div class="tab-panel" id="tab-fotos">
+      <div class="page-title">Foto's Beheren</div>
+      <p class="page-sub">Upload, crop, verwijder of herorden foto's. Klik "Publiceren" om wijzigingen live te zetten.</p>
+
+      <!-- Upload zone -->
+      <div class="card">
+        <div class="card-title">Foto Toevoegen</div>
+        <div class="upload-zone" id="upload-zone" onclick="document.getElementById('file-input').click()"
+             ondragover="onDragOver(event)" ondragleave="onDragLeave(event)" ondrop="onDrop(event)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" width="48" height="48">
+            <polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/>
+            <path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/>
+          </svg>
+          <p>Klik om een foto te kiezen of sleep hem hierheen</p>
+          <span>JPG, PNG — maximaal 15 MB</span>
         </div>
-        <div class="form-group">
-          <label>Locatie / Zaal *</label>
-          <input type="text" id="new-venue" placeholder="bv. De Frontieren" />
-        </div>
+        <input type="file" id="file-input" accept="image/*" style="display:none" onchange="onFileSelect(event)" />
       </div>
-      <div class="form-row" style="margin-top:20px;">
-        <div class="form-group">
-          <label>Stad *</label>
-          <input type="text" id="new-city" placeholder="bv. Westouter, België" />
-        </div>
-        <div class="form-group">
-          <label>Info-knop link <span style="text-transform:none;font-weight:400;letter-spacing:0">(optioneel)</span></label>
-          <input type="text" id="new-infolink" placeholder="https://… of e-mailadres" />
-          <span style="font-size:11px;color:var(--muted);margin-top:4px;">Leeg = verwijst naar contactformulier</span>
-        </div>
+
+      <!-- Current photos -->
+      <div class="card">
+        <div class="card-title">Galerij (<span id="photo-count">0</span> foto's)</div>
+        <div id="photo-grid" class="photo-grid"><div class="empty-state">Foto's worden geladen…</div></div>
       </div>
-      <div class="form-footer">
-        <button class="btn btn-red" onclick="addShow()">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          Show toevoegen
-        </button>
-        <span id="add-error" style="font-size:13px;color:#e74c3c;display:none;">Vul alle velden in.</span>
-      </div>
-    </div>
+    </div><!-- /tab-fotos -->
 
   </div><!-- /main -->
 
-  <!-- Save bar -->
+  <!-- Shared save bar -->
   <div id="save-bar">
-    <span class="save-bar-msg">Je hebt onopgeslagen wijzigingen.</span>
-    <button class="btn btn-red" id="btn-publish" onclick="publishShows()">
+    <span class="save-bar-msg" id="save-bar-msg">Je hebt onopgeslagen wijzigingen.</span>
+    <button class="btn btn-red" id="btn-publish" onclick="publishCurrent()">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg>
       Publiceren
     </button>
-    <button class="btn btn-ghost" onclick="reloadShows()">Annuleren</button>
+    <button class="btn btn-ghost" onclick="cancelCurrent()">Annuleren</button>
   </div>
 
 </div><!-- /app -->
 
-<!-- ══════════════════════════════════════════════════════════
-     EDIT MODAL
-══════════════════════════════════════════════════════════ -->
+<!-- ═══════════════════════════════════════════════════════════
+     SHOW EDIT MODAL
+═══════════════════════════════════════════════════════════ -->
 <div id="modal-overlay">
   <div class="modal">
     <h2>Show Bewerken</h2>
     <input type="hidden" id="edit-id" />
     <div class="form-row three">
-      <div class="form-group">
-        <label>Dag *</label>
-        <input type="number" id="edit-day" min="1" max="31" />
-      </div>
+      <div class="form-group"><label>Dag *</label><input type="number" id="edit-day" min="1" max="31" /></div>
       <div class="form-group">
         <label>Maand *</label>
         <select id="edit-month">
-          <option value="JAN">Januari</option>
-          <option value="FEB">Februari</option>
-          <option value="MRT">Maart</option>
-          <option value="APR">April</option>
-          <option value="MEI">Mei</option>
-          <option value="JUN">Juni</option>
-          <option value="JUL">Juli</option>
-          <option value="AUG">Augustus</option>
-          <option value="SEP">September</option>
-          <option value="OKT">Oktober</option>
-          <option value="NOV">November</option>
-          <option value="DEC">December</option>
+          <option value="JAN">Januari</option><option value="FEB">Februari</option><option value="MRT">Maart</option>
+          <option value="APR">April</option><option value="MEI">Mei</option><option value="JUN">Juni</option>
+          <option value="JUL">Juli</option><option value="AUG">Augustus</option><option value="SEP">September</option>
+          <option value="OKT">Oktober</option><option value="NOV">November</option><option value="DEC">December</option>
         </select>
       </div>
-      <div class="form-group">
-        <label>Jaar *</label>
-        <input type="number" id="edit-year" min="2024" max="2030" />
-      </div>
+      <div class="form-group"><label>Jaar *</label><input type="number" id="edit-year" min="2024" max="2035" /></div>
     </div>
     <div class="form-row" style="margin-top:20px;">
       <div class="form-group">
         <label>Weekdag *</label>
         <select id="edit-weekday">
-          <option value="Maandag">Maandag</option>
-          <option value="Dinsdag">Dinsdag</option>
-          <option value="Woensdag">Woensdag</option>
-          <option value="Donderdag">Donderdag</option>
-          <option value="Vrijdag">Vrijdag</option>
-          <option value="Zaterdag">Zaterdag</option>
-          <option value="Zondag">Zondag</option>
+          <option>Maandag</option><option>Dinsdag</option><option>Woensdag</option><option>Donderdag</option>
+          <option>Vrijdag</option><option>Zaterdag</option><option>Zondag</option>
         </select>
       </div>
-      <div class="form-group">
-        <label>Locatie / Zaal *</label>
-        <input type="text" id="edit-venue" />
-      </div>
+      <div class="form-group"><label>Locatie / Zaal *</label><input type="text" id="edit-venue" /></div>
     </div>
     <div class="form-row" style="margin-top:20px;">
-      <div class="form-group">
-        <label>Stad *</label>
-        <input type="text" id="edit-city" />
-      </div>
+      <div class="form-group"><label>Stad *</label><input type="text" id="edit-city" /></div>
       <div class="form-group">
         <label>Info-knop link <span style="text-transform:none;font-weight:400;letter-spacing:0">(optioneel)</span></label>
         <input type="text" id="edit-infolink" placeholder="https://… of e-mailadres" />
@@ -552,270 +352,507 @@
   </div>
 </div>
 
-<!-- Toast -->
+<!-- ═══════════════════════════════════════════════════════════
+     CROP MODAL
+═══════════════════════════════════════════════════════════ -->
+<div id="crop-overlay">
+  <div class="crop-header">
+    <h2>Foto Bijsnijden & Toevoegen</h2>
+    <button class="btn btn-ghost btn-sm" onclick="closeCrop()">✕ Annuleren</button>
+  </div>
+  <div class="crop-body">
+    <div class="crop-canvas-wrap">
+      <img id="crop-image" src="" alt="Crop preview" />
+    </div>
+    <div class="crop-sidebar">
+
+      <div>
+        <div class="crop-section-title">Draaien &amp; spiegelen</div>
+        <div class="crop-btn-group">
+          <button class="crop-ctrl-btn" onclick="cropper.rotate(-90)" title="Roteer links">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4.95"/></svg>
+            −90°
+          </button>
+          <button class="crop-ctrl-btn" onclick="cropper.rotate(90)" title="Roteer rechts">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-.49-4.95"/></svg>
+            +90°
+          </button>
+          <button class="crop-ctrl-btn" onclick="cropper.scaleX(cropper.getData().scaleX === -1 ? 1 : -1)">↔ Spiegel</button>
+          <button class="crop-ctrl-btn" onclick="cropper.reset()">↺ Reset</button>
+        </div>
+      </div>
+
+      <div>
+        <div class="crop-section-title">Verhouding</div>
+        <div class="crop-btn-group" id="ratio-btns">
+          <button class="crop-ctrl-btn active" onclick="setRatio(NaN, this)">Vrij</button>
+          <button class="crop-ctrl-btn" onclick="setRatio(1, this)">1:1</button>
+          <button class="crop-ctrl-btn" onclick="setRatio(4/3, this)">4:3</button>
+          <button class="crop-ctrl-btn" onclick="setRatio(3/4, this)">3:4</button>
+          <button class="crop-ctrl-btn" onclick="setRatio(16/9, this)">16:9</button>
+        </div>
+      </div>
+
+      <div>
+        <div class="crop-section-title">Grootte in galerij</div>
+        <div class="crop-size-group">
+          <button class="crop-size-btn active" data-size="" onclick="selectSize(this)">
+            Normaal <span class="crop-size-desc">1 kolom, 1 rij</span>
+          </button>
+          <button class="crop-size-btn" data-size="tall" onclick="selectSize(this)">
+            Hoog (tall) <span class="crop-size-desc">1 kolom, 2 rijen — goed voor portretten</span>
+          </button>
+          <button class="crop-size-btn" data-size="wide" onclick="selectSize(this)">
+            Breed (wide) <span class="crop-size-desc">2 kolommen, 1 rij — goed voor landschappen</span>
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <div class="crop-footer">
+    <span class="crop-filename" id="crop-filename"></span>
+    <span id="crop-progress">Bezig met uploaden…</span>
+    <button class="btn btn-ghost btn-sm" onclick="closeCrop()">Annuleren</button>
+    <button class="btn btn-red" id="btn-crop-confirm" onclick="confirmCrop()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg>
+      Toevoegen aan galerij
+    </button>
+  </div>
+</div>
+
 <div id="toast"></div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.js"></script>
 <script>
-  // ── Config ──────────────────────────────────────────────────
-  const REPO_OWNER = 'Lowieverdru';
-  const REPO_NAME  = 'bloedend-hart';
-  const FILE_PATH  = 'shows.json';
-  const PASSWORD   = 'bloedend2025'; // ← Wijzig dit wachtwoord
+// ════════════════════════════════════════════════════════════
+//  CONFIG & STATE
+// ════════════════════════════════════════════════════════════
+const REPO_OWNER    = 'Lowieverdru';
+const REPO_NAME     = 'bloedend-hart';
+const SHOWS_PATH    = 'shows.json';
+const GALLERY_PATH  = 'gallery.json';
+const PASSWORD      = 'bloedend2025';
 
-  // ── State ───────────────────────────────────────────────────
-  let shows    = [];
-  let fileSha  = '';   // GitHub file SHA (needed for PUT)
-  let dirty    = false;
-  let ghToken  = '';
+let ghToken       = '';
+let currentTab    = 'shows';
 
-  // ── Login ───────────────────────────────────────────────────
-  function doLogin() {
-    const pw    = document.getElementById('login-password').value;
-    const token = document.getElementById('login-token').value.trim();
+// Shows state
+let shows         = [];
+let showsFileSha  = '';
+let showsDirty    = false;
 
-    if (pw !== PASSWORD) {
-      document.getElementById('login-error').style.display = 'block';
-      return;
-    }
-    if (!token || !token.startsWith('ghp_')) {
-      document.getElementById('login-error').textContent = 'Voer een geldig GitHub token in (begint met ghp_).';
-      document.getElementById('login-error').style.display = 'block';
-      return;
-    }
+// Gallery state
+let gallery       = [];
+let galleryFileSha= '';
+let galleryDirty  = false;
 
-    ghToken = token;
-    localStorage.setItem('bh_token', token);
+// Cropper
+let cropper       = null;
+let cropFile      = null;
+let selectedSize  = '';
 
-    document.getElementById('login-screen').style.display = 'none';
-    document.getElementById('app').style.display = 'block';
-    reloadShows();
+
+// ════════════════════════════════════════════════════════════
+//  LOGIN
+// ════════════════════════════════════════════════════════════
+function doLogin() {
+  const pw    = document.getElementById('login-password').value;
+  const token = document.getElementById('login-token').value.trim();
+  const err   = document.getElementById('login-error');
+  if (pw !== PASSWORD) { err.textContent = 'Ongeldig wachtwoord.'; err.style.display = 'block'; return; }
+  if (!token.startsWith('ghp_') && !token.startsWith('github_pat_')) {
+    err.textContent = 'Voer een geldig GitHub token in.'; err.style.display = 'block'; return;
   }
+  ghToken = token;
+  localStorage.setItem('bh_token', token);
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  reloadShows();
+  reloadGallery();
+}
+function doLogout() { localStorage.removeItem('bh_token'); location.reload(); }
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && document.getElementById('login-screen').style.display !== 'none') doLogin();
+});
+window.addEventListener('load', () => {
+  const saved = localStorage.getItem('bh_token');
+  if (saved) document.getElementById('login-token').value = saved;
+});
 
-  function doLogout() {
-    localStorage.removeItem('bh_token');
-    location.reload();
-  }
 
-  // Allow Enter key on login
-  document.addEventListener('keydown', e => {
-    if (e.key === 'Enter' && document.getElementById('login-screen').style.display !== 'none') {
-      doLogin();
-    }
+// ════════════════════════════════════════════════════════════
+//  TABS
+// ════════════════════════════════════════════════════════════
+function switchTab(name) {
+  currentTab = name;
+  document.querySelectorAll('.tab-btn').forEach((b, i) => {
+    b.classList.toggle('active', (i === 0 && name === 'shows') || (i === 1 && name === 'fotos'));
   });
+  document.getElementById('tab-shows').classList.toggle('active', name === 'shows');
+  document.getElementById('tab-fotos').classList.toggle('active', name === 'fotos');
+  updateSaveBar();
+}
 
-  // Auto-fill token from localStorage if present
-  window.addEventListener('load', () => {
-    const saved = localStorage.getItem('bh_token');
-    if (saved) document.getElementById('login-token').value = saved;
+
+// ════════════════════════════════════════════════════════════
+//  GITHUB API HELPERS
+// ════════════════════════════════════════════════════════════
+function ghHeaders() {
+  return { 'Authorization': `token ${ghToken}`, 'Accept': 'application/vnd.github.v3+json', 'Content-Type': 'application/json' };
+}
+function contentsUrl(path) {
+  return `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${encodeURIComponent(path).replace(/%2F/g,'/')}`;
+}
+
+async function ghGet(path) {
+  const res = await fetch(contentsUrl(path), { headers: ghHeaders() });
+  if (!res.ok) throw new Error(`Laden mislukt (${res.status})`);
+  const data = await res.json();
+  return { sha: data.sha, content: JSON.parse(atob(data.content.replace(/\n/g,''))) };
+}
+
+async function ghPut(path, sha, content, message) {
+  const body = { message, content: btoa(unescape(encodeURIComponent(JSON.stringify(content, null, 2)))) };
+  if (sha) body.sha = sha;
+  const res = await fetch(contentsUrl(path), { method: 'PUT', headers: ghHeaders(), body: JSON.stringify(body) });
+  if (!res.ok) { const e = await res.json(); throw new Error(e.message || 'Opslaan mislukt'); }
+  return (await res.json()).content.sha;
+}
+
+async function ghUploadBinary(path, base64, sha, message) {
+  const body = { message, content: base64 };
+  if (sha) body.sha = sha;
+  const res = await fetch(contentsUrl(path), { method: 'PUT', headers: ghHeaders(), body: JSON.stringify(body) });
+  if (!res.ok) { const e = await res.json(); throw new Error(e.message || 'Upload mislukt'); }
+  return (await res.json()).content.sha;
+}
+
+
+// ════════════════════════════════════════════════════════════
+//  SHOWS
+// ════════════════════════════════════════════════════════════
+async function reloadShows() {
+  setShowsDirty(false);
+  document.getElementById('shows-container').innerHTML = '<div class="empty-state">Laden…</div>';
+  try {
+    const { sha, content } = await ghGet(SHOWS_PATH);
+    showsFileSha = sha; shows = content; renderShows();
+  } catch(e) {
+    document.getElementById('shows-container').innerHTML = `<div class="empty-state" style="color:#e74c3c;">${e.message}</div>`;
+  }
+}
+
+function renderShows() {
+  const c = document.getElementById('shows-container');
+  if (!shows.length) { c.innerHTML = '<div class="empty-state">Geen shows gepland.</div>'; return; }
+  c.innerHTML = shows.map(s => `
+    <div class="show-row" data-id="${s.id}">
+      <div class="show-date-badge">
+        <div class="day">${s.day}</div>
+        <div class="month">${s.month}</div>
+        <div class="year">${s.year}</div>
+      </div>
+      <div class="show-details">
+        <span class="venue">${s.venue}</span>
+        <span class="city">${s.city}</span>
+        <span class="wd">${s.weekday}</span>
+        ${s.infoLink
+          ? `<span style="font-size:11px;color:var(--muted);margin-top:3px;">🔗 ${s.infoLink}</span>`
+          : `<span style="font-size:11px;color:var(--muted);margin-top:3px;opacity:.5;">Info → contactformulier</span>`}
+      </div>
+      <div class="show-actions">
+        <button class="btn btn-ghost btn-sm" onclick="openEdit('${s.id}')">Bewerken</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteShow('${s.id}')">Verwijder</button>
+      </div>
+    </div>`).join('');
+}
+
+function setShowsDirty(val) {
+  showsDirty = val;
+  updateSaveBar();
+}
+
+function addShow() {
+  const day = document.getElementById('new-day').value.trim();
+  const month = document.getElementById('new-month').value;
+  const year = document.getElementById('new-year').value.trim();
+  const weekday = document.getElementById('new-weekday').value;
+  const venue = document.getElementById('new-venue').value.trim();
+  const city = document.getElementById('new-city').value.trim();
+  const infoLink = document.getElementById('new-infolink').value.trim();
+  const errEl = document.getElementById('add-error');
+  if (!day || !month || !year || !weekday || !venue || !city) {
+    errEl.style.display = 'inline'; setTimeout(() => errEl.style.display = 'none', 3000); return;
+  }
+  shows.push({ id: Date.now().toString(), weekday, day: day.padStart(2,'0'), month, year, venue, city, infoLink });
+  ['new-day','new-year','new-venue','new-city','new-infolink'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('new-month').value = '';
+  document.getElementById('new-weekday').value = '';
+  renderShows(); setShowsDirty(true);
+  toast('Show toegevoegd — klik "Publiceren" om op te slaan.');
+}
+
+function deleteShow(id) {
+  if (!confirm('Weet je zeker dat je deze show wil verwijderen?')) return;
+  shows = shows.filter(s => s.id !== id);
+  renderShows(); setShowsDirty(true);
+  toast('Show verwijderd — klik "Publiceren" om op te slaan.');
+}
+
+function openEdit(id) {
+  const s = shows.find(s => s.id === id); if (!s) return;
+  document.getElementById('edit-id').value       = id;
+  document.getElementById('edit-day').value      = s.day;
+  document.getElementById('edit-month').value    = s.month;
+  document.getElementById('edit-year').value     = s.year;
+  document.getElementById('edit-weekday').value  = s.weekday;
+  document.getElementById('edit-venue').value    = s.venue;
+  document.getElementById('edit-city').value     = s.city;
+  document.getElementById('edit-infolink').value = s.infoLink || '';
+  document.getElementById('modal-overlay').classList.add('open');
+}
+function closeModal() { document.getElementById('modal-overlay').classList.remove('open'); }
+function saveEdit() {
+  const id = document.getElementById('edit-id').value;
+  const day = document.getElementById('edit-day').value.trim();
+  const month = document.getElementById('edit-month').value;
+  const year = document.getElementById('edit-year').value.trim();
+  const weekday = document.getElementById('edit-weekday').value;
+  const venue = document.getElementById('edit-venue').value.trim();
+  const city = document.getElementById('edit-city').value.trim();
+  const infoLink = document.getElementById('edit-infolink').value.trim();
+  if (!day || !month || !year || !weekday || !venue || !city) { alert('Vul alle velden in.'); return; }
+  const idx = shows.findIndex(s => s.id === id);
+  if (idx !== -1) shows[idx] = { id, weekday, day: day.padStart(2,'0'), month, year, venue, city, infoLink };
+  closeModal(); renderShows(); setShowsDirty(true);
+  toast('Wijzigingen opgeslagen — klik "Publiceren" om te publiceren.');
+}
+document.getElementById('modal-overlay').addEventListener('click', e => {
+  if (e.target === document.getElementById('modal-overlay')) closeModal();
+});
+
+async function publishShows() {
+  const btn = document.getElementById('btn-publish');
+  btn.disabled = true; btn.textContent = 'Bezig…';
+  try {
+    showsFileSha = await ghPut(SHOWS_PATH, showsFileSha, shows, 'Shows bijgewerkt via CMS');
+    setShowsDirty(false);
+    toast('✓ Shows gepubliceerd! De website wordt binnen 1 minuut bijgewerkt.');
+  } catch(e) { toast('Fout: ' + e.message, true); }
+  finally { btn.disabled = false; btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg> Publiceren'; }
+}
+
+
+// ════════════════════════════════════════════════════════════
+//  GALLERY
+// ════════════════════════════════════════════════════════════
+async function reloadGallery() {
+  setGalleryDirty(false);
+  document.getElementById('photo-grid').innerHTML = '<div class="empty-state">Laden…</div>';
+  try {
+    const { sha, content } = await ghGet(GALLERY_PATH);
+    galleryFileSha = sha; gallery = content; renderGallery();
+  } catch(e) {
+    document.getElementById('photo-grid').innerHTML = `<div class="empty-state" style="color:#e74c3c;">${e.message}</div>`;
+  }
+}
+
+function renderGallery() {
+  document.getElementById('photo-count').textContent = gallery.length;
+  const grid = document.getElementById('photo-grid');
+  if (!gallery.length) { grid.innerHTML = '<div class="empty-state">Geen foto\'s in de galerij.</div>'; return; }
+  grid.innerHTML = gallery.map((p, i) => {
+    const fname = p.path.split('/').pop().replace(/\.[^.]+$/, '');
+    return `
+    <div class="photo-card" data-id="${p.id}">
+      <img class="photo-thumb" src="${p.path}?t=${Date.now()}" alt="${p.alt}" loading="lazy" />
+      <div class="photo-controls">
+        <div class="photo-size-btns">
+          <button class="size-btn ${p.size===''?'active':''}"      onclick="setPhotoSize('${p.id}','',this)">Norm.</button>
+          <button class="size-btn ${p.size==='tall'?'active':''}"  onclick="setPhotoSize('${p.id}','tall',this)">Hoog</button>
+          <button class="size-btn ${p.size==='wide'?'active':''}"  onclick="setPhotoSize('${p.id}','wide',this)">Breed</button>
+        </div>
+        <div class="photo-bottom">
+          <div class="photo-move-btns">
+            <button class="move-btn" onclick="movePhoto('${p.id}',-1)" title="Omhoog" ${i===0?'disabled':''}>↑</button>
+            <button class="move-btn" onclick="movePhoto('${p.id}',1)"  title="Omlaag" ${i===gallery.length-1?'disabled':''}>↓</button>
+          </div>
+          <span class="photo-label" title="${fname}">${fname}</span>
+          <button class="btn btn-danger btn-sm" onclick="deletePhoto('${p.id}')">✕</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function setPhotoSize(id, size, btn) {
+  const p = gallery.find(p => p.id === id); if (!p) return;
+  p.size = size;
+  // Update active state on size buttons
+  btn.closest('.photo-size-btns').querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  setGalleryDirty(true);
+}
+
+function movePhoto(id, dir) {
+  const idx = gallery.findIndex(p => p.id === id); if (idx < 0) return;
+  const newIdx = idx + dir;
+  if (newIdx < 0 || newIdx >= gallery.length) return;
+  [gallery[idx], gallery[newIdx]] = [gallery[newIdx], gallery[idx]];
+  renderGallery(); setGalleryDirty(true);
+}
+
+function deletePhoto(id) {
+  if (!confirm('Foto verwijderen uit de galerij?\n(Het bestand blijft bewaard op GitHub.)')) return;
+  gallery = gallery.filter(p => p.id !== id);
+  renderGallery(); setGalleryDirty(true);
+  toast('Foto verwijderd uit galerij — klik "Publiceren" om op te slaan.');
+}
+
+function setGalleryDirty(val) {
+  galleryDirty = val;
+  updateSaveBar();
+}
+
+async function publishGallery() {
+  const btn = document.getElementById('btn-publish');
+  btn.disabled = true; btn.textContent = 'Bezig…';
+  try {
+    galleryFileSha = await ghPut(GALLERY_PATH, galleryFileSha, gallery, 'Galerij bijgewerkt via CMS');
+    setGalleryDirty(false);
+    toast('✓ Galerij gepubliceerd! De website wordt binnen 1 minuut bijgewerkt.');
+  } catch(e) { toast('Fout: ' + e.message, true); }
+  finally { btn.disabled = false; btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg> Publiceren'; }
+}
+
+
+// ════════════════════════════════════════════════════════════
+//  SAVE BAR (shared)
+// ════════════════════════════════════════════════════════════
+function updateSaveBar() {
+  const bar = document.getElementById('save-bar');
+  const dirty = currentTab === 'shows' ? showsDirty : galleryDirty;
+  bar.classList.toggle('visible', dirty);
+}
+function publishCurrent() { currentTab === 'shows' ? publishShows() : publishGallery(); }
+function cancelCurrent()  { currentTab === 'shows' ? reloadShows()  : reloadGallery(); }
+
+
+// ════════════════════════════════════════════════════════════
+//  UPLOAD & CROP
+// ════════════════════════════════════════════════════════════
+function onDragOver(e)  { e.preventDefault(); document.getElementById('upload-zone').classList.add('drag-over'); }
+function onDragLeave()  { document.getElementById('upload-zone').classList.remove('drag-over'); }
+function onDrop(e) {
+  e.preventDefault(); onDragLeave();
+  const file = e.dataTransfer.files[0];
+  if (file && file.type.startsWith('image/')) openCrop(file);
+}
+function onFileSelect(e) { const f = e.target.files[0]; if (f) openCrop(f); e.target.value = ''; }
+
+function openCrop(file) {
+  if (file.size > 15 * 1024 * 1024) { toast('Bestand is te groot (max 15 MB).', true); return; }
+  cropFile = file;
+  selectedSize = '';
+  document.getElementById('crop-filename').textContent = file.name;
+  document.getElementById('crop-progress').style.display = 'none';
+  document.getElementById('btn-crop-confirm').disabled = false;
+  // Reset size buttons
+  document.querySelectorAll('.crop-size-btn').forEach(b => b.classList.toggle('active', b.dataset.size === ''));
+  // Reset ratio buttons
+  document.querySelectorAll('#ratio-btns .crop-ctrl-btn').forEach((b,i) => b.classList.toggle('active', i===0));
+
+  const url = URL.createObjectURL(file);
+  const img  = document.getElementById('crop-image');
+  img.src    = url;
+
+  document.getElementById('crop-overlay').classList.add('open');
+
+  if (cropper) { cropper.destroy(); cropper = null; }
+  img.onload = () => {
+    cropper = new Cropper(img, {
+      viewMode: 1, autoCropArea: 0.85,
+      background: false, movable: true, zoomable: true, rotatable: true, scalable: true,
+      aspectRatio: NaN
+    });
+  };
+}
+
+function closeCrop() {
+  document.getElementById('crop-overlay').classList.remove('open');
+  if (cropper) { cropper.destroy(); cropper = null; }
+  cropFile = null;
+}
+
+function setRatio(ratio, btn) {
+  if (cropper) cropper.setAspectRatio(ratio);
+  document.querySelectorAll('#ratio-btns .crop-ctrl-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function selectSize(btn) {
+  selectedSize = btn.dataset.size;
+  document.querySelectorAll('.crop-size-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+async function confirmCrop() {
+  if (!cropper || !cropFile) return;
+  const btn = document.getElementById('btn-crop-confirm');
+  const prog = document.getElementById('crop-progress');
+  btn.disabled = true; prog.style.display = 'inline';
+
+  try {
+    // Get cropped canvas
+    const canvas = cropper.getCroppedCanvas({ maxWidth: 2400, maxHeight: 2400, imageSmoothingQuality: 'high' });
+    const blob = await new Promise(res => canvas.toBlob(res, 'image/jpeg', 0.88));
+    const base64 = await blobToBase64(blob);
+
+    // Build a safe filename
+    const ext  = 'jpg';
+    const safe = cropFile.name.replace(/\.[^.]+$/, '').replace(/[^a-zA-Z0-9_-]/g, '_').slice(0, 40);
+    const filename = `${Date.now()}-${safe}.${ext}`;
+    const repoPath = `galerij/${filename}`;
+
+    // Upload to GitHub
+    prog.textContent = 'Uploaden naar GitHub…';
+    await ghUploadBinary(repoPath, base64.split(',')[1], null, `Foto geüpload via CMS: ${filename}`);
+
+    // Add to gallery
+    gallery.push({ id: Date.now().toString() + Math.random().toString(36).slice(2), path: repoPath, alt: 'Bloedend Hart live', size: selectedSize });
+    renderGallery(); setGalleryDirty(true);
+    closeCrop();
+    toast('✓ Foto toegevoegd — klik "Publiceren" om te bewaren.');
+  } catch(e) {
+    toast('Upload mislukt: ' + e.message, true);
+    prog.style.display = 'none';
+    btn.disabled = false;
+  }
+}
+
+function blobToBase64(blob) {
+  return new Promise((res, rej) => {
+    const reader = new FileReader();
+    reader.onload  = () => res(reader.result);
+    reader.onerror = rej;
+    reader.readAsDataURL(blob);
   });
+}
 
-  // ── GitHub API ──────────────────────────────────────────────
-  const API = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${FILE_PATH}`;
 
-  async function fetchShows() {
-    const res = await fetch(API, {
-      headers: {
-        'Authorization': `token ${ghToken}`,
-        'Accept': 'application/vnd.github.v3+json'
-      }
-    });
-    if (!res.ok) throw new Error(`GitHub API fout: ${res.status}`);
-    const data = await res.json();
-    fileSha = data.sha;
-    return JSON.parse(atob(data.content.replace(/\n/g, '')));
-  }
-
-  async function pushShows(newShows) {
-    const content = btoa(unescape(encodeURIComponent(
-      JSON.stringify(newShows, null, 2)
-    )));
-    const res = await fetch(API, {
-      method: 'PUT',
-      headers: {
-        'Authorization': `token ${ghToken}`,
-        'Accept': 'application/vnd.github.v3+json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        message: 'Shows bijgewerkt via CMS',
-        content: content,
-        sha: fileSha
-      })
-    });
-    if (!res.ok) {
-      const err = await res.json();
-      throw new Error(err.message || 'Opslaan mislukt');
-    }
-    const data = await res.json();
-    fileSha = data.content.sha;
-  }
-
-  // ── Load & render shows ─────────────────────────────────────
-  async function reloadShows() {
-    setDirty(false);
-    const container = document.getElementById('shows-container');
-    container.innerHTML = '<div class="empty-state">Laden…</div>';
-    try {
-      shows = await fetchShows();
-      renderShows();
-    } catch (err) {
-      container.innerHTML = `<div class="empty-state" style="color:#e74c3c;">${err.message}</div>`;
-    }
-  }
-
-  function renderShows() {
-    const container = document.getElementById('shows-container');
-    if (!shows.length) {
-      container.innerHTML = '<div class="empty-state">Geen shows gepland.</div>';
-      return;
-    }
-    container.innerHTML = shows.map((s, i) => `
-      <div class="show-row" data-id="${s.id}">
-        <div class="show-date-badge">
-          <div class="day">${s.day}</div>
-          <div class="month">${s.month}</div>
-          <div class="year">${s.year}</div>
-        </div>
-        <div class="show-details">
-          <span class="venue">${s.venue}</span>
-          <span class="city">${s.city}</span>
-          <span class="wd">${s.weekday}</span>
-          ${s.infoLink ? `<span style="font-size:11px;color:var(--muted);margin-top:3px;">🔗 ${s.infoLink}</span>` : `<span style="font-size:11px;color:var(--muted);margin-top:3px;opacity:0.5;">Info → contactformulier</span>`}
-        </div>
-        <div class="show-actions">
-          <button class="btn btn-ghost" onclick="openEdit('${s.id}')">Bewerken</button>
-          <button class="btn btn-danger" onclick="deleteShow('${s.id}')">Verwijder</button>
-        </div>
-      </div>`).join('');
-  }
-
-  // ── Dirty state ─────────────────────────────────────────────
-  function setDirty(val) {
-    dirty = val;
-    const bar = document.getElementById('save-bar');
-    if (val) bar.classList.add('visible');
-    else     bar.classList.remove('visible');
-  }
-
-  // ── Add show ─────────────────────────────────────────────────
-  function addShow() {
-    const day      = document.getElementById('new-day').value.trim();
-    const month    = document.getElementById('new-month').value;
-    const year     = document.getElementById('new-year').value.trim();
-    const weekday  = document.getElementById('new-weekday').value;
-    const venue    = document.getElementById('new-venue').value.trim();
-    const city     = document.getElementById('new-city').value.trim();
-    const infoLink = document.getElementById('new-infolink').value.trim();
-    const errEl    = document.getElementById('add-error');
-
-    if (!day || !month || !year || !weekday || !venue || !city) {
-      errEl.style.display = 'inline';
-      setTimeout(() => errEl.style.display = 'none', 3000);
-      return;
-    }
-
-    shows.push({
-      id:      Date.now().toString(),
-      weekday, day: day.padStart(2, '0'),
-      month, year, venue, city, infoLink
-    });
-
-    // Clear form
-    ['new-day','new-year','new-venue','new-city','new-infolink'].forEach(id =>
-      document.getElementById(id).value = '');
-    document.getElementById('new-month').value = '';
-    document.getElementById('new-weekday').value = '';
-
-    renderShows();
-    setDirty(true);
-    toast('Show toegevoegd. Klik "Publiceren" om op te slaan.');
-  }
-
-  // ── Delete show ──────────────────────────────────────────────
-  function deleteShow(id) {
-    if (!confirm('Weet je zeker dat je deze show wil verwijderen?')) return;
-    shows = shows.filter(s => s.id !== id);
-    renderShows();
-    setDirty(true);
-    toast('Show verwijderd. Klik "Publiceren" om op te slaan.');
-  }
-
-  // ── Edit show ────────────────────────────────────────────────
-  function openEdit(id) {
-    const s = shows.find(s => s.id === id);
-    if (!s) return;
-    document.getElementById('edit-id').value        = id;
-    document.getElementById('edit-day').value       = s.day;
-    document.getElementById('edit-month').value     = s.month;
-    document.getElementById('edit-year').value      = s.year;
-    document.getElementById('edit-weekday').value   = s.weekday;
-    document.getElementById('edit-venue').value     = s.venue;
-    document.getElementById('edit-city').value      = s.city;
-    document.getElementById('edit-infolink').value  = s.infoLink || '';
-    document.getElementById('modal-overlay').classList.add('open');
-  }
-
-  function closeModal() {
-    document.getElementById('modal-overlay').classList.remove('open');
-  }
-
-  function saveEdit() {
-    const id       = document.getElementById('edit-id').value;
-    const day      = document.getElementById('edit-day').value.trim();
-    const month    = document.getElementById('edit-month').value;
-    const year     = document.getElementById('edit-year').value.trim();
-    const weekday  = document.getElementById('edit-weekday').value;
-    const venue    = document.getElementById('edit-venue').value.trim();
-    const city     = document.getElementById('edit-city').value.trim();
-    const infoLink = document.getElementById('edit-infolink').value.trim();
-
-    if (!day || !month || !year || !weekday || !venue || !city) {
-      alert('Vul alle velden in.');
-      return;
-    }
-
-    const idx = shows.findIndex(s => s.id === id);
-    if (idx !== -1) {
-      shows[idx] = { id, weekday, day: day.padStart(2, '0'), month, year, venue, city, infoLink };
-    }
-    closeModal();
-    renderShows();
-    setDirty(true);
-    toast('Wijzigingen opgeslagen. Klik "Publiceren" om te publiceren.');
-  }
-
-  // Close modal on backdrop click
-  document.getElementById('modal-overlay').addEventListener('click', e => {
-    if (e.target === document.getElementById('modal-overlay')) closeModal();
-  });
-
-  // ── Publish ──────────────────────────────────────────────────
-  async function publishShows() {
-    const btn = document.getElementById('btn-publish');
-    btn.disabled = true;
-    btn.textContent = 'Bezig…';
-    try {
-      await pushShows(shows);
-      setDirty(false);
-      toast('✓ Shows gepubliceerd! De website wordt binnen 1 minuut bijgewerkt.');
-    } catch (err) {
-      toast('Fout: ' + err.message, true);
-    } finally {
-      btn.disabled = false;
-      btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg> Publiceren`;
-    }
-  }
-
-  // ── Toast ────────────────────────────────────────────────────
-  let toastTimer;
-  function toast(msg, isError = false) {
-    const el = document.getElementById('toast');
-    el.textContent = msg;
-    el.className = isError ? 'error' : '';
-    el.style.display = 'block';
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => el.style.display = 'none', 5000);
-  }
+// ════════════════════════════════════════════════════════════
+//  TOAST
+// ════════════════════════════════════════════════════════════
+let toastTimer;
+function toast(msg, isError = false) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = isError ? 'error' : '';
+  el.style.display = 'block';
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.style.display = 'none', 5500);
+}
 </script>
 </body>
 </html>

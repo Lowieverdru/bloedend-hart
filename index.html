@@ -177,23 +177,7 @@
       <span class="label label-red">Foto's</span>
       <h2>Galerij</h2>
     </div>
-    <div class="gallery-grid">
-      <div class="gallery-item gallery-wide"><img src="Bloedend Hart/foto BH Reningelst/2026-02-22 - Bloedend Hart  (76).JPG" alt="Bloedend Hart live" loading="lazy" /></div>
-      <div class="gallery-item gallery-tall"><img src="Bloedend Hart/Bloedend Hart - Lo/8A7A4772.jpg" alt="Bloedend Hart live" loading="lazy" /></div>
-      <div class="gallery-item"><img src="Bloedend Hart/Bloedend Hart - Lo/8A7A4734.jpg" alt="Bloedend Hart live" loading="lazy" /></div>
-      <div class="gallery-item gallery-tall"><img src="Bloedend Hart/foto BH Reningelst/2026-02-22 - Bloedend Hart  (68).JPG" alt="Bloedend Hart live" loading="lazy" /></div>
-      <div class="gallery-item"><img src="Bloedend Hart/foto BH Reningelst/2026-02-22 - Bloedend Hart  (38).JPG" alt="Bloedend Hart live" loading="lazy" /></div>
-      <div class="gallery-item"><img src="Bloedend Hart/Bloedend Hart - Lo/8A7A4824.jpg" alt="Bloedend Hart live" loading="lazy" /></div>
-      <div class="gallery-item gallery-tall"><img src="Bloedend Hart/Bloedend Hart - Lo/8A7A4835.jpg" alt="Bloedend Hart live" loading="lazy" /></div>
-      <div class="gallery-item gallery-tall"><img src="Bloedend Hart/foto BH Reningelst/2026-02-22 - Bloedend Hart  (52).JPG" alt="Bloedend Hart live" loading="lazy" /></div>
-      <div class="gallery-item"><img src="Bloedend Hart/Bloedend Hart - Lo/8A7A4854.jpg" alt="Bloedend Hart live" loading="lazy" /></div>
-      <div class="gallery-item"><img src="Bloedend Hart/foto BH Reningelst/2026-02-22 - Bloedend Hart  (70).JPG" alt="Bloedend Hart live" loading="lazy" /></div>
-      <div class="gallery-item gallery-wide"><img src="Bloedend Hart/Bloedend Hart - Lo/8A7A4880.jpg" alt="Bloedend Hart live" loading="lazy" /></div>
-      <div class="gallery-item gallery-tall"><img src="Bloedend Hart/Bloedend Hart - Lo/8A7A4925.jpg" alt="Bloedend Hart live" loading="lazy" /></div>
-      <div class="gallery-item"><img src="Bloedend Hart/Bloedend Hart - Lo/8A7A4821.jpg" alt="Bloedend Hart live" loading="lazy" /></div>
-      <div class="gallery-item"><img src="Bloedend Hart/Bloedend Hart - Lo/8A7A4900.jpg" alt="Bloedend Hart live" loading="lazy" /></div>
-      <div class="gallery-item"><img src="Bloedend Hart/Bloedend Hart - Lo/8A7A4916.jpg" alt="Bloedend Hart live" loading="lazy" /></div>
-    </div>
+    <div class="gallery-grid" id="gallery-grid"></div>
   </section>
 
   <!-- CONTACT -->
@@ -357,6 +341,22 @@
         list.innerHTML = '<p style="color:var(--muted);font-size:14px;">Shows konden niet worden geladen.</p>';
       }
     }
+
+    // Load gallery dynamically from gallery.json
+    fetch('gallery.json?t=' + Date.now())
+      .then(r => r.json())
+      .then(photos => {
+        const grid = document.getElementById('gallery-grid');
+        grid.innerHTML = photos.map(p => {
+          const cls = p.size ? `gallery-item gallery-${p.size}` : 'gallery-item';
+          return `<div class="${cls}"><img src="${p.path}" alt="${p.alt}" loading="lazy" /></div>`;
+        }).join('');
+        grid.querySelectorAll('.gallery-item').forEach(el => {
+          el.classList.add('fade-in');
+          observer.observe(el);
+        });
+      })
+      .catch(() => {});
 
     // Intersection observer for fade-in
     const observer = new IntersectionObserver((entries) => {
