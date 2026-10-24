@@ -507,7 +507,7 @@ h2 {
   display: grid;
   grid-template-columns: 1fr 1.2fr;
   gap: clamp(40px, 6vw, 100px);
-  align-items: start;
+  align-items: end;
 }
 .contact-info p {
   color: rgba(255,255,255,0.65);
@@ -553,58 +553,6 @@ h2 {
 }
 .social-link:hover { color: var(--white); }
 
-/* Form */
-.contact-form {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-}
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-.form-group label {
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: var(--muted);
-}
-.form-group input,
-.form-group textarea,
-.form-group select {
-  background: transparent;
-  border: none;
-  border-bottom: 1px solid var(--border);
-  color: var(--white);
-  font-family: var(--font-body);
-  font-size: 15px;
-  padding: 12px 0;
-  outline: none;
-  width: 100%;
-  transition: border-color 0.2s;
-  -webkit-appearance: none;
-}
-.form-group input:focus,
-.form-group textarea:focus,
-.form-group select:focus {
-  border-bottom-color: var(--white);
-}
-.form-group input::placeholder,
-.form-group textarea::placeholder {
-  color: var(--muted);
-}
-.form-group select { cursor: pointer; background: var(--bg); }
-.form-group select option { background: var(--bg-3); }
-.form-group textarea { resize: vertical; min-height: 120px; }
-.form-success {
-  display: none;
-  color: #4caf50;
-  font-size: 14px;
-  padding: 12px 0;
-  letter-spacing: 0.05em;
-}
 
 /* ─── Footer ─────────────────────────────────────────────── */
 .footer {
