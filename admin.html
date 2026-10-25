@@ -78,6 +78,7 @@
     .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
     .form-row.three { grid-template-columns: 1fr 1fr 1fr; }
     @media (max-width: 600px) { .form-row, .form-row.three { grid-template-columns: 1fr; } }
+    input[type="time"] { color-scheme: dark; }
     .form-group { display: flex; flex-direction: column; gap: 8px; }
     .form-group label { font-size: 11px; font-weight: 600; letter-spacing: .15em; text-transform: uppercase; color: var(--muted); }
     .form-group input, .form-group select { background: transparent; border: none; border-bottom: 1px solid var(--border); color: var(--white); font-family: 'Inter', sans-serif; font-size: 15px; padding: 10px 0; outline: none; width: 100%; transition: border-color .2s; -webkit-appearance: none; }
@@ -237,7 +238,7 @@
           </div>
           <div class="form-group"><label>Jaar *</label><input type="number" id="new-year" placeholder="bv. 2025" min="2024" max="2035" /></div>
         </div>
-        <div class="form-row" style="margin-top:20px;">
+        <div class="form-row three" style="margin-top:20px;">
           <div class="form-group">
             <label>Weekdag *</label>
             <select id="new-weekday">
@@ -246,6 +247,7 @@
               <option>Vrijdag</option><option>Zaterdag</option><option>Zondag</option>
             </select>
           </div>
+          <div class="form-group"><label>Uur <span style="text-transform:none;font-weight:400;letter-spacing:0">(optioneel)</span></label><input type="time" id="new-time" /></div>
           <div class="form-group"><label>Locatie / Zaal *</label><input type="text" id="new-venue" placeholder="bv. De Frontieren" /></div>
         </div>
         <div class="form-row" style="margin-top:20px;">
@@ -253,7 +255,7 @@
           <div class="form-group">
             <label>Info-knop link <span style="text-transform:none;font-weight:400;letter-spacing:0">(optioneel)</span></label>
             <input type="text" id="new-infolink" placeholder="https://… of e-mailadres" />
-            <span style="font-size:11px;color:var(--muted);margin-top:4px;">Leeg = verwijst naar contactformulier</span>
+            <span style="font-size:11px;color:var(--muted);margin-top:4px;">Leeg = verwijst naar contactgegevens</span>
           </div>
         </div>
         <div class="form-footer">
@@ -327,7 +329,7 @@
       </div>
       <div class="form-group"><label>Jaar *</label><input type="number" id="edit-year" min="2024" max="2035" /></div>
     </div>
-    <div class="form-row" style="margin-top:20px;">
+    <div class="form-row three" style="margin-top:20px;">
       <div class="form-group">
         <label>Weekdag *</label>
         <select id="edit-weekday">
@@ -335,6 +337,7 @@
           <option>Vrijdag</option><option>Zaterdag</option><option>Zondag</option>
         </select>
       </div>
+      <div class="form-group"><label>Uur <span style="text-transform:none;font-weight:400;letter-spacing:0">(optioneel)</span></label><input type="time" id="edit-time" /></div>
       <div class="form-group"><label>Locatie / Zaal *</label><input type="text" id="edit-venue" /></div>
     </div>
     <div class="form-row" style="margin-top:20px;">
@@ -342,7 +345,7 @@
       <div class="form-group">
         <label>Info-knop link <span style="text-transform:none;font-weight:400;letter-spacing:0">(optioneel)</span></label>
         <input type="text" id="edit-infolink" placeholder="https://… of e-mailadres" />
-        <span style="font-size:11px;color:var(--muted);margin-top:4px;">Leeg = verwijst naar contactformulier</span>
+        <span style="font-size:11px;color:var(--muted);margin-top:4px;">Leeg = verwijst naar contactgegevens</span>
       </div>
     </div>
     <div class="form-footer">
@@ -556,10 +559,10 @@ function renderShows() {
       <div class="show-details">
         <span class="venue">${s.venue}</span>
         <span class="city">${s.city}</span>
-        <span class="wd">${s.weekday}</span>
+        <span class="wd">${s.weekday}${s.time ? ' · ' + s.time : ''}</span>
         ${s.infoLink
           ? `<span style="font-size:11px;color:var(--muted);margin-top:3px;">🔗 ${s.infoLink}</span>`
-          : `<span style="font-size:11px;color:var(--muted);margin-top:3px;opacity:.5;">Info → contactformulier</span>`}
+          : `<span style="font-size:11px;color:var(--muted);margin-top:3px;opacity:.5;">Info → contactgegevens</span>`}
       </div>
       <div class="show-actions">
         <button class="btn btn-ghost btn-sm" onclick="openEdit('${s.id}')">Bewerken</button>
@@ -578,6 +581,7 @@ function addShow() {
   const month = document.getElementById('new-month').value;
   const year = document.getElementById('new-year').value.trim();
   const weekday = document.getElementById('new-weekday').value;
+  const time = document.getElementById('new-time').value;
   const venue = document.getElementById('new-venue').value.trim();
   const city = document.getElementById('new-city').value.trim();
   const infoLink = document.getElementById('new-infolink').value.trim();
@@ -585,8 +589,8 @@ function addShow() {
   if (!day || !month || !year || !weekday || !venue || !city) {
     errEl.style.display = 'inline'; setTimeout(() => errEl.style.display = 'none', 3000); return;
   }
-  shows.push({ id: Date.now().toString(), weekday, day: day.padStart(2,'0'), month, year, venue, city, infoLink });
-  ['new-day','new-year','new-venue','new-city','new-infolink'].forEach(id => document.getElementById(id).value = '');
+  shows.push({ id: Date.now().toString(), weekday, day: day.padStart(2,'0'), month, year, time, venue, city, infoLink });
+  ['new-day','new-year','new-time','new-venue','new-city','new-infolink'].forEach(id => document.getElementById(id).value = '');
   document.getElementById('new-month').value = '';
   document.getElementById('new-weekday').value = '';
   renderShows(); setShowsDirty(true);
@@ -607,6 +611,7 @@ function openEdit(id) {
   document.getElementById('edit-month').value    = s.month;
   document.getElementById('edit-year').value     = s.year;
   document.getElementById('edit-weekday').value  = s.weekday;
+  document.getElementById('edit-time').value     = s.time || '';
   document.getElementById('edit-venue').value    = s.venue;
   document.getElementById('edit-city').value     = s.city;
   document.getElementById('edit-infolink').value = s.infoLink || '';
@@ -619,12 +624,13 @@ function saveEdit() {
   const month = document.getElementById('edit-month').value;
   const year = document.getElementById('edit-year').value.trim();
   const weekday = document.getElementById('edit-weekday').value;
+  const time = document.getElementById('edit-time').value;
   const venue = document.getElementById('edit-venue').value.trim();
   const city = document.getElementById('edit-city').value.trim();
   const infoLink = document.getElementById('edit-infolink').value.trim();
   if (!day || !month || !year || !weekday || !venue || !city) { alert('Vul alle velden in.'); return; }
   const idx = shows.findIndex(s => s.id === id);
-  if (idx !== -1) shows[idx] = { id, weekday, day: day.padStart(2,'0'), month, year, venue, city, infoLink };
+  if (idx !== -1) shows[idx] = { id, weekday, day: day.padStart(2,'0'), month, year, time, venue, city, infoLink };
   closeModal(); renderShows(); setShowsDirty(true);
   toast('Wijzigingen opgeslagen — klik "Publiceren" om te publiceren.');
 }

@@ -295,7 +295,7 @@
             <div class="show-info">
               <span class="show-venue">${s.venue}</span>
               <span class="show-city">${s.city}</span>
-              <span class="show-day-label">${s.weekday}</span>
+              <span class="show-day-label">${s.weekday}${s.time ? ' · ' + s.time : ''}</span>
             </div>
             <a href="${href}"${target}${rel} class="btn btn-sm btn-outline">Info</a>
           </div>`;
