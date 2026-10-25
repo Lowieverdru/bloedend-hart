@@ -273,7 +273,7 @@ h2 {
   align-items: center;
 }
 .over-img {
-  aspect-ratio: 3/4;
+  aspect-ratio: 4/3;
   overflow: hidden;
 }
 .over-img img {
