@@ -264,11 +264,20 @@
 
 
     // ── Shows laden vanuit shows.json ──────────────────────────
+    const MONTHS = ['JAN','FEB','MRT','APR','MEI','JUN','JUL','AUG','SEP','OKT','NOV','DEC'];
+    function showKey(s) {
+      const m = String(MONTHS.indexOf(s.month) + 1).padStart(2, '0');
+      return `${s.year}-${m}-${String(s.day).padStart(2, '0')} ${s.time || ''}`;
+    }
+    function sortShows(list) {
+      return list.slice().sort((a, b) => showKey(a).localeCompare(showKey(b)));
+    }
+
     async function loadShows() {
       const list = document.getElementById('shows-list');
       try {
         const res = await fetch('./shows.json?_=' + Date.now());
-        const shows = await res.json();
+        const shows = sortShows(await res.json());
         if (!shows.length) {
           list.innerHTML = '<p style="color:var(--muted);font-size:14px;">Momenteel geen shows gepland.</p>';
           return;

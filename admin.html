@@ -546,7 +546,17 @@ async function reloadShows() {
   }
 }
 
+const MONTHS = ['JAN','FEB','MRT','APR','MEI','JUN','JUL','AUG','SEP','OKT','NOV','DEC'];
+function showKey(s) {
+  const m = String(MONTHS.indexOf(s.month) + 1).padStart(2, '0');
+  return `${s.year}-${m}-${String(s.day).padStart(2, '0')} ${s.time || ''}`;
+}
+function sortShows(list) {
+  return list.slice().sort((a, b) => showKey(a).localeCompare(showKey(b)));
+}
+
 function renderShows() {
+  shows = sortShows(shows);
   const c = document.getElementById('shows-container');
   if (!shows.length) { c.innerHTML = '<div class="empty-state">Geen shows gepland.</div>'; return; }
   c.innerHTML = shows.map(s => `
