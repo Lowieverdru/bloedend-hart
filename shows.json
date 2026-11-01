@@ -8,7 +8,7 @@
     "time": "20:00",
     "venue": "Lissewal",
     "city": "Elverdinge",
-    "infoLink": "mailto:hadewychsamyn@hotmail.com"
+    "infoLink": "hadewychsamyn@hotmail.com"
   },
   {
     "id": "1792924252208",
@@ -19,7 +19,7 @@
     "time": "17:30",
     "venue": "Kapel",
     "city": "Zonnebeke",
-    "infoLink": "mailto:Philiep.vandoolaeghe@gmail.com"
+    "infoLink": "Philiep.vandoolaeghe@gmail.com"
   },
   {
     "id": "1792924729713",
@@ -30,7 +30,7 @@
     "time": "20:00",
     "venue": "Kapel",
     "city": "Zonnebeke",
-    "infoLink": "mailto:Philiep.vandoolaeghe@gmail.com"
+    "infoLink": "Philiep.vandoolaeghe@gmail.com"
   },
   {
     "id": "1792924328669",
@@ -74,6 +74,6 @@
     "time": "20:00",
     "venue": "Frontieren",
     "city": "Westouter",
-    "infoLink": "mailto:Simon.fonteyne@kbc.be"
+    "infoLink": "https://frontieren.be/nl/bloedend-hart-pagina"
   }
 ]
