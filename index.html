@@ -273,6 +273,14 @@
       return list.slice().sort((a, b) => showKey(a).localeCompare(showKey(b)));
     }
 
+    function contactLink(c) {
+      const v = c.value.trim();
+      if (c.type === 'phone') return `<a href="tel:${v.replace(/[^\d+]/g, '')}">${v}</a>`;
+      if (c.type === 'email') return `<a href="mailto:${v}">${v}</a>`;
+      const url = /^https?:\/\//i.test(v) ? v : 'https://' + v;
+      return `<a href="${url}" target="_blank" rel="noopener">${v.replace(/^https?:\/\//i, '').replace(/\/$/, '')}</a>`;
+    }
+
     async function loadShows() {
       const list = document.getElementById('shows-list');
       try {
@@ -305,6 +313,7 @@
               <span class="show-venue">${s.venue}</span>
               <span class="show-city">${s.city}</span>
               <span class="show-day-label">${s.weekday}${s.time ? ' · ' + s.time : ''}</span>
+              ${s.contacts && s.contacts.length ? `<span class="show-contacts">${s.contacts.map(contactLink).join('')}</span>` : ''}
             </div>
             <a href="${href}"${target}${rel} class="btn btn-sm btn-outline">Info</a>
           </div>`;

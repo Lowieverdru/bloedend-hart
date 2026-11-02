@@ -375,6 +375,20 @@ h2 {
   color: var(--muted);
   letter-spacing: 0.05em;
 }
+.show-contacts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+  margin-top: 4px;
+  font-size: 13px;
+}
+.show-contacts a {
+  color: var(--muted);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: color 0.2s;
+}
+.show-contacts a:hover { color: var(--white); }
 .shows-note {
   margin-top: 32px;
   font-size: 14px;

@@ -86,6 +86,9 @@
     .form-group select option { background: var(--bg-3); }
     .form-group input:focus, .form-group select:focus { border-bottom-color: var(--white); }
     .form-group input::placeholder { color: var(--muted); }
+    .contact-rows { display: flex; flex-direction: column; gap: 8px; }
+    .contact-row { display: grid; grid-template-columns: 130px 1fr auto; gap: 10px; align-items: center; }
+    .contact-row select { padding: 8px; }
     .form-footer { margin-top: 28px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
 
     /* ── Show rows ─────────────────────────────────────────── */
@@ -155,7 +158,7 @@
     /* ── Modal (shows edit) ────────────────────────────────── */
     #modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.7); display: none; align-items: center; justify-content: center; z-index: 500; padding: 24px; }
     #modal-overlay.open { display: flex; }
-    .modal { background: var(--bg-2); border: 1px solid var(--border); padding: 40px; width: 100%; max-width: 580px; }
+    .modal { background: var(--bg-2); border: 1px solid var(--border); padding: 40px; width: 100%; max-width: 580px; max-height: calc(100vh - 48px); overflow-y: auto; }
     .modal h2 { font-family: 'Bebas Neue', sans-serif; font-size: 28px; letter-spacing: .04em; margin-bottom: 28px; }
 
     /* ── Save bar ──────────────────────────────────────────── */
@@ -258,6 +261,11 @@
             <span style="font-size:11px;color:var(--muted);margin-top:4px;">Leeg = verwijst naar contactgegevens</span>
           </div>
         </div>
+        <div class="form-group" style="margin-top:20px;">
+          <label>Contactgegevens locatie <span style="text-transform:none;font-weight:400;letter-spacing:0">(optioneel, telefoon / e-mail / website)</span></label>
+          <div class="contact-rows" id="new-contacts"></div>
+          <div><button type="button" class="btn btn-ghost btn-sm" onclick="addContactRow('new-contacts')">+ Contact toevoegen</button></div>
+        </div>
         <div class="form-footer">
           <button class="btn btn-red" onclick="addShow()">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
@@ -347,6 +355,11 @@
         <input type="text" id="edit-infolink" placeholder="https://… of e-mailadres" />
         <span style="font-size:11px;color:var(--muted);margin-top:4px;">Leeg = verwijst naar contactgegevens</span>
       </div>
+    </div>
+    <div class="form-group" style="margin-top:20px;">
+      <label>Contactgegevens locatie <span style="text-transform:none;font-weight:400;letter-spacing:0">(optioneel, telefoon / e-mail / website)</span></label>
+      <div class="contact-rows" id="edit-contacts"></div>
+      <div><button type="button" class="btn btn-ghost btn-sm" onclick="addContactRow('edit-contacts')">+ Contact toevoegen</button></div>
     </div>
     <div class="form-footer">
       <button class="btn btn-red" onclick="saveEdit()">Opslaan</button>
@@ -555,6 +568,27 @@ function sortShows(list) {
   return list.slice().sort((a, b) => showKey(a).localeCompare(showKey(b)));
 }
 
+const CONTACT_TYPES = { phone: 'Telefoon', email: 'E-mail', website: 'Website' };
+function escAttr(v) { return String(v).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
+function addContactRow(containerId, c = { type: 'phone', value: '' }) {
+  const row = document.createElement('div');
+  row.className = 'contact-row';
+  row.innerHTML = `
+    <select>${Object.entries(CONTACT_TYPES).map(([k, l]) => `<option value="${k}"${k === c.type ? ' selected' : ''}>${l}</option>`).join('')}</select>
+    <input type="text" value="${escAttr(c.value)}" placeholder="bv. 057 12 34 56, info@zaal.be of www.zaal.be" />
+    <button type="button" class="btn btn-danger btn-sm" onclick="this.parentElement.remove()">✕</button>`;
+  document.getElementById(containerId).appendChild(row);
+}
+function readContacts(containerId) {
+  return [...document.querySelectorAll(`#${containerId} .contact-row`)]
+    .map(r => ({ type: r.querySelector('select').value, value: r.querySelector('input').value.trim() }))
+    .filter(c => c.value);
+}
+function fillContacts(containerId, list) {
+  document.getElementById(containerId).innerHTML = '';
+  (list || []).forEach(c => addContactRow(containerId, c));
+}
+
 function renderShows() {
   shows = sortShows(shows);
   const c = document.getElementById('shows-container');
@@ -570,6 +604,7 @@ function renderShows() {
         <span class="venue">${s.venue}</span>
         <span class="city">${s.city}</span>
         <span class="wd">${s.weekday}${s.time ? ' · ' + s.time : ''}</span>
+        ${(s.contacts || []).map(c => `<span style="font-size:11px;color:var(--muted);margin-top:3px;">${CONTACT_TYPES[c.type] || ''}: ${c.value}</span>`).join('')}
         ${s.infoLink
           ? `<span style="font-size:11px;color:var(--muted);margin-top:3px;">🔗 ${s.infoLink}</span>`
           : `<span style="font-size:11px;color:var(--muted);margin-top:3px;opacity:.5;">Info → contactgegevens</span>`}
@@ -595,11 +630,13 @@ function addShow() {
   const venue = document.getElementById('new-venue').value.trim();
   const city = document.getElementById('new-city').value.trim();
   const infoLink = document.getElementById('new-infolink').value.trim();
+  const contacts = readContacts('new-contacts');
   const errEl = document.getElementById('add-error');
   if (!day || !month || !year || !weekday || !venue || !city) {
     errEl.style.display = 'inline'; setTimeout(() => errEl.style.display = 'none', 3000); return;
   }
-  shows.push({ id: Date.now().toString(), weekday, day: day.padStart(2,'0'), month, year, time, venue, city, infoLink });
+  shows.push({ id: Date.now().toString(), weekday, day: day.padStart(2,'0'), month, year, time, venue, city, infoLink, contacts });
+  fillContacts('new-contacts', []);
   ['new-day','new-year','new-time','new-venue','new-city','new-infolink'].forEach(id => document.getElementById(id).value = '');
   document.getElementById('new-month').value = '';
   document.getElementById('new-weekday').value = '';
@@ -625,6 +662,7 @@ function openEdit(id) {
   document.getElementById('edit-venue').value    = s.venue;
   document.getElementById('edit-city').value     = s.city;
   document.getElementById('edit-infolink').value = s.infoLink || '';
+  fillContacts('edit-contacts', s.contacts);
   document.getElementById('modal-overlay').classList.add('open');
 }
 function closeModal() { document.getElementById('modal-overlay').classList.remove('open'); }
@@ -638,9 +676,10 @@ function saveEdit() {
   const venue = document.getElementById('edit-venue').value.trim();
   const city = document.getElementById('edit-city').value.trim();
   const infoLink = document.getElementById('edit-infolink').value.trim();
+  const contacts = readContacts('edit-contacts');
   if (!day || !month || !year || !weekday || !venue || !city) { alert('Vul alle velden in.'); return; }
   const idx = shows.findIndex(s => s.id === id);
-  if (idx !== -1) shows[idx] = { id, weekday, day: day.padStart(2,'0'), month, year, time, venue, city, infoLink };
+  if (idx !== -1) shows[idx] = { id, weekday, day: day.padStart(2,'0'), month, year, time, venue, city, infoLink, contacts };
   closeModal(); renderShows(); setShowsDirty(true);
   toast('Wijzigingen opgeslagen — klik "Publiceren" om te publiceren.');
 }
