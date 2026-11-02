@@ -1,16 +1,5 @@
 [
   {
-    "id": "1793617164016",
-    "weekday": "Donderdag",
-    "day": "04",
-    "month": "FEB",
-    "year": "2027",
-    "time": "20:00",
-    "venue": "'t Vertier",
-    "city": "Westouter",
-    "infoLink": ""
-  },
-  {
     "id": "1792924210296",
     "weekday": "Donderdag",
     "day": "28",
@@ -52,7 +41,30 @@
     "time": "20:00",
     "venue": "'t Vertier",
     "city": "Westouter",
-    "infoLink": ""
+    "infoLink": "",
+    "contacts": [
+      {
+        "type": "phone",
+        "value": "+32477802328"
+      }
+    ]
+  },
+  {
+    "id": "1793617164016",
+    "weekday": "Donderdag",
+    "day": "04",
+    "month": "FEB",
+    "year": "2027",
+    "time": "20:00",
+    "venue": "'t Vertier",
+    "city": "Westouter",
+    "infoLink": "",
+    "contacts": [
+      {
+        "type": "phone",
+        "value": "+32477802328"
+      }
+    ]
   },
   {
     "id": "1792924356412",
